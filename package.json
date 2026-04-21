@@ -1,0 +1,17 @@
+{
+  "name": "tubdelhi210426",
+  "version": "1.0.0",
+  "description": "TUB Delhi Web Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --inspect server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
