@@ -1,0 +1,8 @@
+﻿body { font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .animate-slide-in-right { animation: slideInRight 0.3s ease-out forwards; }

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUB Fit - Admin Dashboard</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js">
+    </script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js">
+    </script>
+    <script
+      src="https://unpkg.com/@babel/standalone/babel.min.js">
+    </script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f9fafb; }
+
+        @media (max-width: 768px) {
+            .admin-table {
+                border-collapse: collapse;
+            }
+            .admin-table thead {
+                display: none;
+            }
+            .admin-table tbody {
+                display: block;
+            }
+            .admin-table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border-radius: 1.5rem;
+                background: #ffffff;
+                box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+                border: 1px solid rgba(229, 231, 235, 1);
+                overflow: hidden;
+            }
+            .admin-table td {
+                display: block;
+                width: 100%;
+                padding: 2.4rem 1.25rem 1rem;
+                position: relative;
+                text-align: left;
+                border-bottom: 1px solid rgba(229, 231, 235, 1);
+            }
+            .admin-table td:not(:first-child) {
+                border-top: 1px solid rgba(229, 231, 235, 1);
+            }
+            .admin-table td:last-child {
+                border-bottom: none;
+            }
+            .admin-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 1.25rem;
+                top: 1rem;
+                font-size: 0.75rem;
+                font-weight: 800;
+                color: rgba(55, 65, 81, 1);
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+            }
+            .admin-table td > * {
+                margin-top: 1.25rem;
+            }
+            .admin-table td > *:first-child {
+                margin-top: 0;
+            }
+            .admin-table td[data-label="Items"] {
+                padding-bottom: 1rem;
+            }
+            .admin-table td[data-label="Total"],
+            .admin-table td[data-label="Action"] {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const ORDERS_WRITE_URL = '/api/orders';
+        const ORDERS_READ_URL = '/api/admin/orders';
+        const AUTH_STORAGE_KEY = 'tubAdminAuthenticated';
+
+        function App() {
+            const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem(AUTH_STORAGE_KEY) === 'true');
+            const [password, setPassword] = useState('');
+            const [loading, setLoading] = useState(false);
+            const getTodayKey = () => {
+                const d = new Date();
+                d.setHours(0, 0, 0, 0);
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            };
+
+            const [orders, setOrders] = useState([]);
+            const [totalSales, setTotalSales] = useState(0);
+            const [filterMode, setFilterMode] = useState('today');
+            const [filterCustomDate, setFilterCustomDate] = useState(getTodayKey());
+            const [statusFilter, setStatusFilter] = useState('all');
+            const [orderStatuses, setOrderStatuses] = useState({});
+            const [deletedOrders, setDeletedOrders] = useState([]);
+            const [exportStartDate, setExportStartDate] = useState(getTodayKey());
+            const [exportEndDate, setExportEndDate] = useState(getTodayKey());
+            const [exporting, setExporting] = useState(false);
+            const [error, setError] = useState(null);
+            
+            // Manual Order State
+            const [isManualModalOpen, setIsManualModalOpen] = useState(false);
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [manualOrder, setManualOrder] = useState({
+                name: '',
+                phone: '',
+                items: '',
+                totalPrice: '',
+                deliveryType: 'home',
+                address: '',
+                deliveryDate: 'Today',
+                timeSlot: 'ASAP'
+            });
+
+            // Simple client-side protection
+            const handleLogin = (e) => {
+                e.preventDefault();
+                // You can change this password to anything you like
+                if (password === 'tubadmin123') {
+                    localStorage.setItem(AUTH_STORAGE_KEY, 'true');
+                    setIsAuthenticated(true);
+                } else {
+                    alert('Incorrect Password');
+                }
+            };
+
+            const todayStart = () => {
+                const d = new Date();
+                d.setHours(0, 0, 0, 0);
+                return d;
+            };
+
+            const dateKey = (date) => {
+                if (!date) return '';
+                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            };
+
+            const readField = (row, aliases) => {
+                if (!row) return '';
+                const keys = Object.keys(row);
+                const normalized = keys.reduce((map, key) => {
+                    map[key.toLowerCase().replace(/[^a-z0-9]/g, '')] = key;
+                    return map;
+                }, {});
+                for (const alias of aliases) {
+                    const key = normalized[alias.toLowerCase().replace(/[^a-z0-9]/g, '')];
+                    if (key && row[key] !== undefined && row[key] !== null && row[key] !== '') return row[key];
+                }
+                return '';
+            };
+
+            const normalizeArrayOrder = (row) => {
+                return {
+                    orderId: row[0] || '',
+                    orderDate: row[1] || '',
+                    orderTime: row[2] || '',
+                    serverTimestamp: row[3] || '',
+                    customerName: row[4] || '',
+                    phone: row[5] || '',
+                    deliveryType: row[6] || '',
+                    address: row[7] || '',
+                    items: row[8] || '',
+                    totalPrice: row[9] || '',
+                    deliveryDate: row[10] || '',
+                    timeSlot: row[11] || '',
+                    gymPromoCode: row[12] || '',
+                    status: row[13] || ''
+                };
+            };
+
+            const normalizeOrder = (row, idx) => {
+                if (Array.isArray(row)) return normalizeArrayOrder(row);
+                const normalized = {
+                    orderId: readField(row, ['orderId', 'Order ID', 'ID']),
+                    customerName: readField(row, ['name', 'Customer Name', 'Customer']),
+                    phone: readField(row, ['phone', 'Phone', 'Phone Number', 'Mobile']),
+                    deliveryType: readField(row, ['deliveryType', 'Delivery Type']),
+                    address: readField(row, ['address', 'Address', 'Address/Location', 'Location']),
+                    items: readField(row, ['items', 'Items', 'Order Items']),
+                    totalPrice: readField(row, ['totalPrice', 'Total Price', 'Total', 'Amount', 'Price']),
+                    deliveryDate: readField(row, ['deliveryDate', 'Delivery Date']),
+                    timeSlot: readField(row, ['timeSlot', 'Time Slot', 'Time']),
+                    orderDate: readField(row, ['orderDate', 'Order Date', 'Timestamp', 'Created At', 'Date']),
+                    orderTime: readField(row, ['orderTime', 'Order Time']),
+                    gymPromoCode: readField(row, ['gymPromoCode', 'Gym Promo Code', 'Promo Code']),
+                    status: readField(row, ['status', 'Status']),
+                    serverTimestamp: readField(row, ['serverTimestamp', 'Server Timestamp', 'Timestamp', 'Created At'])
+                };
+                const values = Object.values(row || {});
+                if (!normalized.customerName && values.length >= 12) return normalizeArrayOrder(values);
+                return normalized;
+            };
+
+            const formatOrderItems = (items) => {
+                if (!items) return '';
+                const cleanedLines = String(items).split('\n').map((line) => {
+                    let cleaned = line.trim();
+                    cleaned = cleaned.replace(/^\s*\d+[\.\)]\s*/, '');
+                    cleaned = cleaned.replace(/\s*\(₹\d+(?:[\d,.]*)?\)/g, '');
+                    cleaned = cleaned.replace(/\s*Ingredients:\s*/gi, '');
+                    cleaned = cleaned.replace(/\s*(?:Calories|Protein|Carbs|Fats)\s*:\s*[^|_\n]*(?:\|\s*[^|_\n]*)*/gi, '');
+                    cleaned = cleaned.replace(/\s*\|\s*$/g, '');
+                    cleaned = cleaned.replace(/^[*_]+|[*_]+$/g, '');
+                    return cleaned.trim();
+                }).filter(Boolean);
+                return cleanedLines.join('\n');
+            };
+
+            const normalizeOrders = (rows) => rows.map(normalizeOrder);
+
+            const fetchOrders = async () => {
+                setLoading(true);
+                setError(null);
+                try {
+                    let url = ORDERS_READ_URL;
+                    
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const text = await response.text();
+                    try {
+                        const result = JSON.parse(text);
+                        if (Array.isArray(result) || result.success) {
+                            const rows = Array.isArray(result) ? result : (Array.isArray(result.data) ? result.data : []);
+                            const normalizedRows = normalizeOrders(rows).reverse();
+                            setOrders(normalizedRows); // Newest first
+                            setTotalSales(normalizedRows.reduce((sum, order) => sum + (Number(order.totalPrice || 0) || 0), 0));
+                            console.log(`✓ Fetched ${normalizedRows.length} orders successfully`);
+                        } else {
+                            setError('Failed to fetch data. ' + (result.message || ''));
+                        }
+                    } catch (parseError) {
+                        console.error('Invalid JSON response:', text);
+                        setError('Received invalid data from the server. Ensure the backend returns valid JSON.');
+                    }
+                } catch (err) {
+                    console.error('Fetch error:', err);
+                    setError('Error connecting to the server. Check console for details.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const exportOrders = async () => {
+                if (!exportStartDate || !exportEndDate) {
+                    alert('Please select both a start and end date for export.');
+                    return;
+                }
+
+                const start = new Date(exportStartDate);
+                const end = new Date(exportEndDate);
+                if (start > end) {
+                    alert('Start date cannot be after end date.');
+                    return;
+                }
+
+                setExporting(true);
+                try {
+                    const response = await fetch(`/api/admin/orders/export?startDate=${encodeURIComponent(exportStartDate)}&endDate=${encodeURIComponent(exportEndDate)}`);
+                    if (!response.ok) {
+                        throw new Error(`Export failed: ${response.status}`);
+                    }
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `orders-${exportStartDate}-to-${exportEndDate}.csv`;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    URL.revokeObjectURL(url);
+                } catch (err) {
+                    console.error('Export error:', err);
+                    alert('Export failed. Check console for details.');
+                } finally {
+                    setExporting(false);
+                }
+            };
+
+            const getOrderKey = (order, idx) => {
+                return order.orderId || `${order.phone || 'no-phone'}-${order.orderDate || 'no-order-date'}-${order.orderTime || 'no-time'}-${order.deliveryDate || 'no-delivery-date'}-${order.totalPrice || 'no-total'}-${order.items || idx}`;
+            };
+
+            const getOrderStatus = (order, idx) => {
+                const key = getOrderKey(order, idx);
+                return orderStatuses[key] || order.status || 'pending';
+            };
+
+            const saveOrderStatus = (order, idx, status) => {
+                const key = getOrderKey(order, idx);
+                const nextStatuses = { ...orderStatuses, [key]: status };
+                setOrderStatuses(nextStatuses);
+                localStorage.setItem('tubAdminOrderStatuses', JSON.stringify(nextStatuses));
+            };
+
+            const deleteOrder = (order, idx) => {
+                if (!confirm('Delete this order from your admin view?')) return;
+                const key = getOrderKey(order, idx);
+                const nextDeleted = [...new Set([...deletedOrders, key])];
+                setDeletedOrders(nextDeleted);
+                localStorage.setItem('tubAdminDeletedOrders', JSON.stringify(nextDeleted));
+            };
+
+            const restoreDeletedOrders = () => {
+                if (!confirm('Show all deleted orders again?')) return;
+                setDeletedOrders([]);
+                localStorage.removeItem('tubAdminDeletedOrders');
+            };
+
+            const formatOrderDatePart = () => {
+                const now = new Date();
+                return `${String(now.getDate()).padStart(2, '0')}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getFullYear()).slice(-2)}`;
+            };
+
+            const formatSlotPart = (slot) => {
+                const slotText = String(slot || '').toUpperCase();
+                const match = slotText.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM|A|P)?/);
+                if (!match) return 'ASAP';
+                let hour = parseInt(match[1], 10);
+                const minutes = match[2] || '00';
+                const meridiem = match[3] || (hour >= 12 ? 'P' : 'A');
+                if (hour > 12) hour -= 12;
+                if (hour === 0) hour = 12;
+                return `${hour}${minutes}${meridiem.charAt(0)}`;
+            };
+
+            const randomCode = (length = 4) => {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                const cryptoApi = window.crypto || window.msCrypto;
+                if (cryptoApi && cryptoApi.getRandomValues) {
+                    const values = new Uint32Array(length);
+                    cryptoApi.getRandomValues(values);
+                    return Array.from(values, value => chars[value % chars.length]).join('');
+                }
+                let code = '';
+                for (let i = 0; i < length; i++) code += chars[Math.floor(Math.random() * chars.length)];
+                return code;
+            };
+
+            const generateOrderId = (slot, existingIds = []) => {
+                const existing = new Set(existingIds);
+                const prefix = `TUB-${formatOrderDatePart()}-${formatSlotPart(slot)}-`;
+                let id = '';
+                for (let attempt = 0; attempt < 20; attempt++) {
+                    id = `${prefix}${randomCode()}`;
+                    if (!existing.has(id)) return id;
+                }
+                return `${prefix}${randomCode(5)}`;
+            };
+
+            const parseOrderDate = (order) => {
+                const rawDate = String(order.deliveryDate || '');
+                const labelDate = String(order.deliveryDateLabel || order.orderDateLabel || '');
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                const parseDateString = (value) => {
+                    const raw = String(value || '').trim();
+                    const lower = raw.toLowerCase();
+                    if (lower.startsWith('today')) return today;
+                    if (lower.startsWith('tomorrow')) {
+                        const tomorrow = new Date(today);
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+                        return tomorrow;
+                    }
+
+                    const bracketDate = raw.match(/\(([^)]+)\)/);
+                    const candidate = bracketDate ? bracketDate[1] : raw;
+                    const normalized = candidate.replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
+
+                    const parseExplicitDayMonthYear = (value) => {
+                        const match = value.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);
+                        if (!match) return null;
+                        const parsed = new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+                        return Number.isNaN(parsed.getTime()) ? null : parsed;
+                    };
+
+                    const parseMonthName = (value) => {
+                        const match = value.match(/^(?:[A-Za-z]{3,9}\s+)?(\d{1,2})\s+([A-Za-z]{3,9})(?:\s+(\d{4}))?$/);
+                        if (!match) return null;
+                        const day = Number(match[1]);
+                        const monthText = match[2];
+                        const year = match[3] ? Number(match[3]) : today.getFullYear();
+                        const month = new Date(`${monthText} 1, ${year}`).getMonth();
+                        if (Number.isNaN(month)) return null;
+                        const parsed = new Date(year, month, day);
+                        return Number.isNaN(parsed.getTime()) ? null : parsed;
+                    };
+
+                    const parseLooseDate = (value) => {
+                        const parsed = new Date(value);
+                        if (Number.isNaN(parsed.getTime())) return null;
+                        parsed.setHours(0,0,0,0);
+                        return parsed;
+                    };
+
+                    let parsed = parseExplicitDayMonthYear(normalized);
+                    if (parsed) return parsed;
+                    parsed = parseMonthName(normalized);
+                    if (parsed) return parsed;
+                    parsed = parseLooseDate(normalized);
+                    if (parsed && /\d{4}/.test(normalized)) return parsed;
+                    parsed = parseMonthName(`${normalized} ${today.getFullYear()}`);
+                    if (parsed) return parsed;
+                    return null;
+                };
+
+                const parsed = parseDateString(rawDate);
+                if (parsed) {
+                    const currentYear = today.getFullYear();
+                    if (parsed.getFullYear() < currentYear - 2 && labelDate) {
+                        const fallback = parseDateString(labelDate);
+                        if (fallback) return fallback;
+                    }
+                    return parsed;
+                }
+                return parseDateString(labelDate);
+            };
+
+            const formatPlacedTime = (order) => {
+                if (order.serverTimestamp) {
+                    const timestamp = new Date(order.serverTimestamp);
+                    if (!Number.isNaN(timestamp.getTime())) {
+                        return timestamp.toLocaleString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+                    }
+                    return order.serverTimestamp;
+                }
+                return `${order.orderDate || ''} ${order.orderTime || ''}`.trim();
+            };
+
+            const filteredOrders = orders.filter((order, idx) => {
+                const key = getOrderKey(order, idx);
+                if (deletedOrders.includes(key)) return false;
+                if (statusFilter !== 'all' && getOrderStatus(order, idx) !== statusFilter) return false;
+                const orderDate = parseOrderDate(order);
+                const today = todayStart();
+                if (filterMode === 'today') return orderDate && dateKey(orderDate) === dateKey(today);
+                if (filterMode === 'upcoming') return orderDate && orderDate >= today;
+                if (filterMode === 'custom') {
+                    return filterCustomDate ? orderDate && dateKey(orderDate) === filterCustomDate : true;
+                }
+                return true;
+            });
+
+            const filteredSales = filteredOrders.reduce((sum, order) => {
+                const price = Number(order.totalPrice || 0);
+                return sum + (Number.isNaN(price) ? 0 : price);
+            }, 0);
+
+            const pendingCount = orders.filter((order, idx) => !deletedOrders.includes(getOrderKey(order, idx)) && getOrderStatus(order, idx) === 'pending').length;
+            const deliveredCount = orders.filter((order, idx) => !deletedOrders.includes(getOrderKey(order, idx)) && getOrderStatus(order, idx) === 'delivered').length;
+
+            useEffect(() => {
+                if (isAuthenticated) {
+                    fetchOrders();
+                    // Auto-refresh every 5 seconds to keep data fresh
+                    const interval = setInterval(fetchOrders, 5000);
+                    return () => clearInterval(interval);
+                }
+            }, [isAuthenticated, filterMode]);
+
+            useEffect(() => {
+                try {
+                    setOrderStatuses(JSON.parse(localStorage.getItem('tubAdminOrderStatuses') || '{}'));
+                    setDeletedOrders(JSON.parse(localStorage.getItem('tubAdminDeletedOrders') || '[]'));
+                } catch (err) {
+                    setOrderStatuses({});
+                    setDeletedOrders([]);
+                }
+            }, []);
+
+            const handleManualSubmit = async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                
+                const orderId = generateOrderId(manualOrder.timeSlot, orders.map(order => order.orderId).filter(Boolean));
+
+                const payload = {
+                    orderId: orderId,
+                    name: manualOrder.name,
+                    phone: manualOrder.phone,
+                    deliveryType: manualOrder.deliveryType,
+                    address: manualOrder.address || 'Ordered via WhatsApp',
+                    items: manualOrder.items,
+                    totalPrice: parseFloat(manualOrder.totalPrice) || 0,
+                    deliveryDate: manualOrder.deliveryDate,
+                    timeSlot: manualOrder.timeSlot,
+                    gymPromoCode: 'WHATSAPP',
+                    calories: 0, protein: 0, carbs: 0, fats: 0 // Default macros to 0 for manual entries
+                };
+
+                try {
+                    await fetch(ORDERS_WRITE_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    setIsManualModalOpen(false);
+                    setManualOrder({ name: '', phone: '', items: '', totalPrice: '', deliveryType: 'home', address: '', deliveryDate: new Date().toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' }), timeSlot: 'ASAP' });
+                    setTimeout(fetchOrders, 1500); // Refresh data after 1.5 seconds to allow sheet to update
+                } catch (err) {
+                    alert("Error saving manual order. Check console.");
+                } finally {
+                    setIsSubmitting(false);
+                }
+            };
+
+            if (!isAuthenticated) {
+                return (
+                    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+                        <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-sm border border-green-200">
+                                    <i className="fas fa-lock"></i>
+                                </div>
+                                <h2 className="text-3xl font-bold text-gray-900">Admin Login</h2>
+                                <p className="mt-2 text-sm text-gray-500">TUB Fit Secure Dashboard</p>
+                            </div>
+                            <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+                                <div>
+                                    <input type="password" required className="appearance-none rounded-xl block w-full px-4 py-4 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm transition-all" placeholder="Enter Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                </div>
+                                <div>
+                                    <button type="submit" className="w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-gray-900 hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 shadow-xl transition-all">
+                                        Sign in
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen">
+                    {/* Manual Order Modal */}
+                    {isManualModalOpen && (
+                        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+                            <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                                <div className="p-6 border-b flex justify-between items-center bg-gray-50">
+                                    <h3 className="font-bold text-xl text-gray-900"><i className="fab fa-whatsapp text-green-500 mr-2"></i> Add WhatsApp Order</h3>
+                                    <button onClick={() => setIsManualModalOpen(false)} className="text-gray-400 hover:text-gray-900 text-2xl">&times;</button>
+                                </div>
+                                <form onSubmit={handleManualSubmit} className="p-6 overflow-y-auto space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-700 mb-1">Customer Name</label>
+                                            <input required type="text" className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.name} onChange={e => setManualOrder({...manualOrder, name: e.target.value})} placeholder="e.g. Aman" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-700 mb-1">Phone Number</label>
+                                            <input required type="tel" className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.phone} onChange={e => setManualOrder({...manualOrder, phone: e.target.value})} placeholder="9876543210" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-700 mb-1">Order Items (What did they order?)</label>
+                                        <textarea required className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500 h-20" value={manualOrder.items} onChange={e => setManualOrder({...manualOrder, items: e.target.value})} placeholder="1x Grilled Chicken Bowl&#10;1x Extra Egg"></textarea>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-700 mb-1">Total Price (₹)</label>
+                                            <input required type="number" className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.totalPrice} onChange={e => setManualOrder({...manualOrder, totalPrice: e.target.value})} placeholder="199" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-700 mb-1">Delivery Type</label>
+                                            <select className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.deliveryType} onChange={e => setManualOrder({...manualOrder, deliveryType: e.target.value})}>
+                                                <option value="home">Home</option>
+                                                <option value="gym">Gym</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-700 mb-1">Delivery Date</label>
+                                            <input required type="text" className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.deliveryDate} onChange={e => setManualOrder({...manualOrder, deliveryDate: e.target.value})} placeholder="Today" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-700 mb-1">Time Slot</label>
+                                            <input required type="text" className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.timeSlot} onChange={e => setManualOrder({...manualOrder, timeSlot: e.target.value})} placeholder="ASAP" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-700 mb-1">Address / Notes</label>
+                                        <input type="text" className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.address} onChange={e => setManualOrder({...manualOrder, address: e.target.value})} placeholder="Customer Address..." />
+                                    </div>
+                                    <button type="submit" disabled={isSubmitting} className="w-full bg-gray-900 text-white font-bold py-4 rounded-xl hover:bg-black transition-colors disabled:opacity-50">
+                                        {isSubmitting ? 'Saving...' : 'Save Order & Send SMS'}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    <nav className="bg-white shadow-sm border-b border-gray-200">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between h-16 items-center">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-gradient-to-br from-[#4ade80] to-[#25D366] w-10 h-10 rounded-xl shadow-lg flex items-center justify-center text-xl text-white relative border border-green-300 shrink-0">
+                                        <i className="fas fa-leaf"></i>
+                                    </div>
+                                    <span className="font-bold text-xl text-gray-900 hidden sm:inline">TUB Fit Admin</span>
+                                </div>
+                                <button onClick={() => { localStorage.removeItem(AUTH_STORAGE_KEY); setIsAuthenticated(false); setPassword(''); }} className="text-gray-500 hover:text-gray-900 text-sm font-medium"><i className="fas fa-sign-out-alt"></i> Logout</button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                            <h1 className="text-2xl font-bold text-gray-900">Orders Dashboard</h1>
+                            
+                            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap items-start">
+                                <button onClick={() => setIsManualModalOpen(true)} className="bg-[#25D366] hover:bg-[#1ebd5a] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-colors">
+                                    <i className="fas fa-plus"></i> WhatsApp Order
+                                </button>
+                                <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
+                                    <span className="text-sm text-gray-500 font-medium ml-2">Date:</span>
+                                    <select className="border-none text-sm py-1.5 px-2 focus:ring-0 focus:outline-none bg-white font-bold cursor-pointer" value={filterMode} onChange={(e) => setFilterMode(e.target.value)}>
+                                        <option value="today">Today</option>
+                                        <option value="upcoming">Upcoming</option>
+                                        <option value="custom">Custom</option>
+                                    </select>
+                                    {filterMode === 'custom' && (
+                                        <input
+                                            type="date"
+                                            value={filterCustomDate}
+                                            onChange={(e) => setFilterCustomDate(e.target.value)}
+                                            className="border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        />
+                                    )}
+                                    <button onClick={fetchOrders} disabled={loading} className="bg-gray-100 hover:bg-gray-200 text-gray-700 w-9 h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-colors">
+                                        <i className={`fas fa-sync-alt ${loading ? 'animate-spin' : ''}`}></i>
+                                    </button>
+                                </div>
+                                <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
+                                    <span className="text-sm text-gray-500 font-medium ml-2">Export:</span>
+                                    <input
+                                        type="date"
+                                        value={exportStartDate}
+                                        onChange={(e) => setExportStartDate(e.target.value)}
+                                        className="border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    />
+                                    <span className="text-sm font-bold">to</span>
+                                    <input
+                                        type="date"
+                                        value={exportEndDate}
+                                        onChange={(e) => setExportEndDate(e.target.value)}
+                                        className="border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    />
+                                    <button onClick={exportOrders} disabled={exporting} className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors">
+                                        {exporting ? 'Exporting...' : 'Download CSV'}
+                                    </button>
+                                </div>
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
+                                    <span className="text-sm text-gray-500 font-medium ml-2">Status:</span>
+                                    <select className="border-none text-sm py-1.5 px-2 focus:ring-0 focus:outline-none bg-white font-bold cursor-pointer" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                                        <option value="all">All</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="delivered">Delivered</option>
+                                    </select>
+                                </div>
+                                {deletedOrders.length > 0 && (
+                                    <button onClick={restoreDeletedOrders} className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-colors">
+                                        <i className="fas fa-undo"></i> Restore Deleted
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Stats Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
+                                <div className="bg-green-100 w-14 h-14 flex items-center justify-center rounded-2xl text-green-600 text-xl border border-green-200"><i className="fas fa-rupee-sign"></i></div>
+                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Filtered Sales</p><p className="text-3xl font-black text-gray-900">₹{filteredSales}</p></div>
+                            </div>
+                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
+                                <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-2xl text-blue-600 text-xl border border-blue-200"><i className="fas fa-shopping-bag"></i></div>
+                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Showing Orders</p><p className="text-3xl font-black text-gray-900">{filteredOrders.length}</p></div>
+                            </div>
+                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
+                                <div className="bg-yellow-100 w-14 h-14 flex items-center justify-center rounded-2xl text-yellow-700 text-xl border border-yellow-200"><i className="fas fa-hourglass-half"></i></div>
+                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Pending</p><p className="text-3xl font-black text-gray-900">{pendingCount}</p></div>
+                            </div>
+                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
+                                <div className="bg-emerald-100 w-14 h-14 flex items-center justify-center rounded-2xl text-emerald-600 text-xl border border-emerald-200"><i className="fas fa-check-circle"></i></div>
+                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Delivered</p><p className="text-3xl font-black text-gray-900">{deliveredCount}</p></div>
+                            </div>
+                        </div>
+
+                        {error && <div className="bg-red-50 text-red-600 p-4 rounded-xl mb-6 text-sm font-medium"><i className="fas fa-exclamation-circle mr-2"></i> {error}</div>}
+
+                        {/* Orders Table */}
+                        <div className="bg-white shadow-sm rounded-3xl border border-gray-100 overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="admin-table min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date & Time</th>
+                                            <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Customer</th>
+                                            <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Items</th>
+                                            <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Delivery Details</th>
+                                            <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Total</th>
+                                            <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-100">
+                                        {loading && orders.length === 0 ? <tr><td colSpan="7" className="px-6 py-12 text-center text-gray-500"><i className="fas fa-circle-notch fa-spin text-3xl mb-3 text-green-500"></i><p className="font-medium">Loading your orders...</p></td></tr> : filteredOrders.length === 0 ? <tr><td colSpan="7" className="px-6 py-12 text-center text-gray-400"><div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3"><i className="fas fa-inbox text-2xl"></i></div><p className="font-medium">No orders found for this filter.</p></td></tr> : filteredOrders.map((order, idx) => (
+                                            <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                                                <td data-label="Date & Time" className="px-6 py-5 whitespace-nowrap">{order.orderId && <div className="text-[11px] font-mono font-bold text-indigo-600 mb-1.5">{order.orderId}</div>}<div className="text-sm font-bold text-gray-900">{order.deliveryDate}</div><div className="text-xs font-bold text-green-700 bg-green-100 inline-flex px-2.5 py-1 rounded-lg mt-1.5"><i className="far fa-clock mr-1"></i> {order.timeSlot}</div><div className="text-[10px] text-gray-400 mt-2 font-medium">Placed: {formatPlacedTime(order)}</div></td>
+                                                <td data-label="Customer" className="px-6 py-5"><div className="text-sm font-bold text-gray-900">{order.customerName}</div><div className="text-xs text-gray-500 mt-1 font-medium bg-gray-100 inline-block px-2 py-1 rounded-md">{order.phone}</div></td>
+                                                <td data-label="Items" className="px-6 py-5"><div className="text-sm text-gray-700 whitespace-pre-wrap max-w-sm leading-relaxed">{formatOrderItems(order.items)}</div>{order.gymPromoCode && <div className="mt-2 inline-flex items-center px-2 py-1 rounded-md text-[11px] font-bold bg-orange-100 text-orange-800 uppercase tracking-wider border border-orange-200"><i className="fas fa-tag mr-1.5"></i> {order.gymPromoCode}</div>}</td>
+                                                <td data-label="Delivery Details" className="px-6 py-5"><div className="text-sm text-gray-900 capitalize font-bold mb-1.5 inline-flex items-center gap-1.5"><i className={`fas ${order.deliveryType === 'gym' ? 'fa-dumbbell text-blue-500' : 'fa-home text-orange-500'}`}></i> {order.deliveryType}</div><div className="text-xs text-gray-500 max-w-[200px] truncate leading-relaxed" title={order.address}>{order.address}</div></td>
+                                                <td data-label="Status" className="px-6 py-5">
+                                                    <select value={getOrderStatus(order, idx)} onChange={(e) => saveOrderStatus(order, idx, e.target.value)} className={`text-xs font-bold rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 ${getOrderStatus(order, idx) === 'pending' ? 'bg-yellow-50 text-yellow-800 border-yellow-200' : getOrderStatus(order, idx) === 'completed' ? 'bg-blue-50 text-blue-800 border-blue-200' : 'bg-emerald-50 text-emerald-800 border-emerald-200'}`}>
+                                                        <option value="pending">Pending</option>
+                                                        <option value="completed">Completed</option>
+                                                        <option value="delivered">Delivered</option>
+                                                    </select>
+                                                </td>
+                                                <td data-label="Total" className="px-6 py-5 whitespace-nowrap text-right"><div className="text-lg font-black text-gray-900">₹{order.totalPrice}</div></td>
+                                                <td data-label="Action" className="px-6 py-5 whitespace-nowrap text-right">
+                                                    <button onClick={() => deleteOrder(order, idx)} className="w-9 h-9 inline-flex items-center justify-center rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors" title="Delete order">
+                                                        <i className="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
