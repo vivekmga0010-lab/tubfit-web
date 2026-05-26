@@ -47,7 +47,8 @@ if (typeof fetch === 'undefined') {
 }
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 function formatOrderDatePart(date = new Date()) {
   return `${String(date.getDate()).padStart(2, '0')}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getFullYear()).slice(-2)}`;
@@ -156,23 +157,28 @@ function formatSlotPart(slot) {
   return `${hour}${minutes}${meridiem.charAt(0)}`;
 }
 
-function randomCode(length = 4) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let code = '';
-  for (let i = 0; i < length; i += 1) {
-    code += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return code;
+function getNextDailySequence(existingIds = []) {
+  const todayPart = formatOrderDatePart();
+  let maxSequence = 9700;
+  const regex = new RegExp(`^TUB-${todayPart}-[^-]+-(\\d+)$`);
+
+  existingIds.forEach((id) => {
+    const match = String(id).match(regex);
+    if (match) {
+      const seq = Number(match[1]);
+      if (!Number.isNaN(seq) && seq > maxSequence) {
+        maxSequence = seq;
+      }
+    }
+  });
+
+  return String(maxSequence + 1).padStart(4, '0');
 }
 
 function generateOrderId(slot, existingIds = []) {
-  const existing = new Set(existingIds);
   const prefix = `TUB-${formatOrderDatePart()}-${formatSlotPart(slot)}-`;
-  for (let attempt = 0; attempt < 20; attempt += 1) {
-    const id = `${prefix}${randomCode()}`;
-    if (!existing.has(id)) return id;
-  }
-  return `${prefix}${randomCode(5)}`;
+  const nextSequence = getNextDailySequence(existingIds);
+  return `${prefix}${nextSequence}`;
 }
 
 // Ensure uploads directory exists in public
@@ -228,10 +234,7 @@ app.post('/api/orders', async (req, res) => {
     }
 
     const existingIds = orders.map(order => order.orderId).filter(Boolean);
-    const incomingOrderId = req.body.orderId;
-    const orderId = incomingOrderId && !existingIds.includes(incomingOrderId)
-      ? incomingOrderId
-      : generateOrderId(req.body.timeSlot, existingIds);
+    const orderId = generateOrderId(req.body.timeSlot, existingIds);
 
     const formattedDeliveryDate = normalizeDeliveryDate(req.body.deliveryDate, req.body.deliveryDateLabel);
     const orderData = {
@@ -245,7 +248,7 @@ app.post('/api/orders', async (req, res) => {
     orders.push(orderData);
     fs.writeFileSync(ordersPath, JSON.stringify(orders, null, 2));
 
-    res.status(200).json({ success: true });
+    res.status(200).json({ success: true, orderId });
   } catch (error) {
     console.error('Order logging failed:', error);
     res.status(500).json({ error: 'Failed to log order' });
@@ -404,8 +407,8 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
   console.log('📁 App served from: ./dist');
   console.log('📁 Uploads served from: ./public/uploads');
   console.log('Press Ctrl+C to stop the server');

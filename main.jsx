@@ -57,40 +57,51 @@ import { createRoot } from 'react-dom/client';
 
         const menuData = {
           "Muscle Gain": [
-            { id: "mg1", name: "The Fit Bowl", ingredients: "Chicken + Quinoa + Sauté Veg + Whole Egg + Lemon Juice + Olive Oil + Sesame Seeds", calories: 600, protein: 60, price: 179, image: "/uploads/the_fit_bowl.webp", badges: ["Best Seller", "High Protein"] },
-            { id: "mg2", name: "Grilled Chicken Bowl", ingredients: "Grilled Chicken + Egg + Brown Rice + Fresh Salad + Lemon Juice + Pumpkin Seeds", calories: 650, protein: 65, price: 179, image: "/uploads/grilled_chicken_bowl.webp", badges: ["Extra Protein"] },
-            { id: "bk1", name: "Bulking Chicken Bowl", ingredients: "Chicken + White Rice + Avocado + Black Beans + Salad + Vegetable + Curd", calories: 750, protein: 55, price: 279, image: "/uploads/bulking_chicken_bowl.webp", badges: ["Calorie Dense"] },
-            { id: "bk2", name: "Chicken Sweet Potato Bowl", ingredients: "Chicken + Sweet Potato + Brown Rice + Vegetable + Whole Egg + Curd + Almonds + Mix Seeds", calories: 780, protein: 60, price: 229, image: "/uploads/chicken_sweet_potato_bowl.webp", badges: ["Complex Carbs"] },
-            { id: "mg3", name: "Paneer Bowl", ingredients: "Paneer + Tofu + Quinoa + Sauté Veg + Olive Oil + Tomato Slice + Mix Seeds", calories: 680, protein: 45, price: 179, image: "/uploads/paneer_bowl.webp", badges: ["Vegetarian"] },
-            { id: "bk3", name: "Paneer Bulking Bowl", ingredients: "Paneer + Brown Rice + Chickpea + Sautéed Vegetable + Soya Chunks + Almonds + Sesame Seeds", calories: 820, protein: 60, price: 229, image: "/uploads/paneer_bulking_bowl.webp", badges: ["Vegetarian Bulk"] }
+            { id: "mg1", name: "The Fit Bowl", ingredients: "Grilled Chicken 150g + Quinoa + Broccoli + Bell Peppers + Carrot + Onion + Boiled Egg + Lemon + Olive Oil + Sesame Seeds", recipe: [
+                { id: 'p1', qty: 1 },
+                { id: 'b3', qty: 1 },
+                { id: 'v1', qty: 1 },
+                { id: 'v2', qty: 1 },
+                { id: 'v3', qty: 1 },
+                { id: 'v7', qty: 1 },
+                { id: 'p7', qty: 1 },
+                { id: 'd1', qty: 1 },
+                { id: 'd2', qty: 1 },
+                { id: 't4', qty: 1 }
+              ], price: 179, image: "/uploads/the_fit_bowl.webp", badges: ["Best Seller", "High Protein"] },
+            { id: "mg2", name: "Grilled Chicken Bowl", ingredients: "Grilled Chicken + Egg + Brown Rice + Fresh Salad + Lemon Juice + Pumpkin Seeds", calories: 650, protein: 65, carbs: 58, fats: 20, price: 179, image: "/uploads/grilled_chicken_bowl.webp", badges: ["Extra Protein"] },
+            { id: "mg3", name: "Paneer Bowl", ingredients: "Paneer + Tofu + Quinoa + Sauté Veg + Olive Oil + Tomato Slice + Mix Seeds", calories: 680, protein: 45, carbs: 52, fats: 34, price: 179, image: "/uploads/paneer_bowl.webp", badges: ["Vegetarian"] },
+            { id: "bk3", name: "Paneer Bulking Bowl", ingredients: "Paneer + Brown Rice + Chickpea + Sautéed Vegetable + Soya Chunks + Almonds + Sesame Seeds", calories: 820, protein: 60, carbs: 90, fats: 36, price: 229, image: "/uploads/paneer_bulking_bowl.webp", badges: ["Vegetarian Bulk"] },
+            { id: "bk1", name: "Bulking Chicken Bowl", ingredients: "Chicken + White Rice + Avocado + Black Beans + Salad + Vegetable + Curd", calories: 750, protein: 55, carbs: 80, fats: 26, price: 279, image: "/uploads/bulking_chicken_bowl.webp", badges: ["Calorie Dense"] }
           ],
           "Fat Loss": [
-            { id: "fl1", name: "Green Bowl", ingredients: "Lettuce + Cucumber + Broccoli + Chickpea + Lemon & Black Pepper Dressing + Mix Seeds", calories: 380, protein: 22, price: 99, image: "/uploads/green_bowl.webp", badges: ["Vegan", "Low Calorie"] },
-            { id: "fl2", name: "Lean Chicken Bowl", ingredients: "Chicken + Lettuce + Cucumber + Tomato Slice + Olive Oil + Lemon + Spinach", calories: 450, protein: 60, price: 179, image: "/uploads/lean_chicken_bowl.webp", badges: ["Keto Friendly"] },
-            { id: "fl3", name: "Lean Veg Bowl (Tofu Fiber)", ingredients: "Tofu + Quinoa + Sauté Vegetable + Mix Seeds + Lettuce + Cherry Tomato", calories: 420, protein: 35, price: 179, image: "/uploads/lean_veg_bowl.webp", badges: ["Vegan", "High Fiber"] }
+            { id: "fl1", name: "Green Bowl", ingredients: "Lettuce + Cucumber + Broccoli + Chickpea + Lemon & Black Pepper Dressing + Mix Seeds", calories: 380, protein: 22, carbs: 34, fats: 14, price: 149, image: "/uploads/green_bowl.webp", badges: ["Vegan", "Low Calorie"] },
+            { id: "fl2", name: "Lean Chicken Bowl", ingredients: "Chicken + Lettuce + Cucumber + Tomato Slice + Olive Oil + Lemon + Spinach", calories: 450, protein: 60, carbs: 18, fats: 14, price: 179, image: "/uploads/lean_chicken_bowl.webp", badges: ["Keto Friendly"] },
+            { id: "fl3", name: "Lean Veg Bowl (Tofu Fiber)", ingredients: "Tofu + Quinoa + Sauté Vegetable + Mix Seeds + Lettuce + Cherry Tomato", calories: 420, protein: 35, carbs: 40, fats: 12, price: 179, image: "/uploads/lean_veg_bowl.webp", badges: ["Vegan", "High Fiber"] }
           ],
           "Max Protein": [
-            { id: "mp1", name: "100gm Protein Chicken Bowl", ingredients: "Chicken Breast + Whole Egg + Fresh Salad + White Rice", calories: 850, protein: 100, price: 299, image: "/uploads/100gm_protein_chicken_bowl.webp", badges: ["100g Protein", "Beast Mode"] },
-            { id: "mp2", name: "100gm Protein Veg Bowl", ingredients: "Paneer + Tofu + Soya Chunks + Fresh Salad", calories: 820, protein: 100, price: 299, image: "/uploads/100gm_protein_veg_bowl.webp", badges: ["100g Protein", "Veg Max"] }
+            { id: "mp1", name: "100gm Protein Chicken Bowl", ingredients: "Chicken Breast + Whole Egg + Fresh Salad + White Rice", calories: 850, protein: 100, carbs: 35, fats: 20, price: 329, image: "/uploads/100gm_protein_chicken_bowl.webp", badges: ["100g Protein", "Beast Mode"] },
+            { id: "mp2", name: "100gm Protein Veg Bowl", ingredients: "Paneer + Tofu + Soya Chunks + Fresh Salad", calories: 820, protein: 100, carbs: 45, fats: 32, price: 329, image: "/uploads/100gm_protein_veg_bowl.webp", badges: ["100g Protein", "Veg Max"] }
           ],
           "Premium Salads": [
-            { id: "sl1", name: "Avocado & Chickpea Salad", ingredients: "Avocado + Chickpea + Lettuce + Cherry Tomatoes + Olive Oil Dressing", calories: 350, protein: 12, price: 229, image: "/uploads/avocado_chickpea_salad.webp", badges: ["Fresh", "Vegan"] },
-            { id: "sl2", name: "Grilled Chicken Caesar", ingredients: "Grilled Chicken + Romaine Lettuce + Parmesan + Croutons + Caesar Dressing", calories: 420, protein: 35, price: 279, image: "/uploads/grilled_chicken_caesar.webp", badges: ["Coming Soon"], upcoming: true },
-            { id: "sl3", name: "Mediterranean Paneer", ingredients: "Paneer + Cucumber + Olives + Red Onion + Feta + Vinaigrette", calories: 380, protein: 18, price: 259, image: "/uploads/mediterranean_paneer.webp", badges: ["Coming Soon"], upcoming: true }
+            { id: "sl1", name: "Egg Protein Salad", ingredients: "2 whole eggs + 2 egg whites + boiled chickpeas + lettuce + cucumber + carrot + light dressing + herbs & seasoning", calories: 360, protein: 28, carbs: 26, fats: 14, price: 199, image: "/uploads/egg_chickpeas_salad.webp", badges: ["Fresh", "High Protein"] },
+            { id: "sl2", name: "Paneer Protein Salad", ingredients: "Paneer (120g) + boiled chickpeas + lettuce + cucumber + carrot + light dressing + herbs & seasoning", calories: 460, protein: 25, carbs: 26, fats: 24, price: 219, image: "/uploads/paneer_chickpeas_salad.webp", badges: ["Fresh", "Vegetarian"] },
+            { id: "sl3", name: "Avocado & Chickpea Salad", ingredients: "Avocado + Chickpea + Lettuce + Cherry Tomatoes + Olive Oil Dressing", calories: 350, protein: 12, carbs: 28, fats: 20, price: 229, image: "/uploads/avocado_chickpea_salad.webp", badges: ["Fresh", "Vegan"] },
+            { id: "sl4", name: "Protein Power Chicken Salad", ingredients: "Grilled chicken (150g) + boiled chickpeas + lettuce + cucumber + carrot + olive oil dressing + herbs & seasoning", calories: 420, protein: 48, carbs: 26, fats: 11, price: 229, image: "/uploads/chicken_chickpeas_salad.webp", badges: ["Fresh", "High Protein"] }
           ],
           "Breakfast": [
-            { id: "bf1", name: "Chicken Quinoa Salad Bowl", ingredients: "Chicken + Quinoa + Cucumber + Tomatoes + Lettuce + Onion + Carrot + Curd + Mixed Seeds", calories: 450, protein: 36, price: 189, image: "/uploads/chicken_quinoa_salad_bowl.webp", badges: ["High Protein", "Clean Eating"] },
-            { id: "bf2", name: "Paneer Quinoa Salad Bowl", ingredients: "Paneer + Quinoa + Cucumber + Cherry Tomatoes + Lettuce + Carrot + Curd + Flax or Chia Seeds", calories: 440, protein: 21, price: 199, image: "/uploads/paneer_quinoa_salad_bowl.webp", badges: ["High Protein", "Low Calorie"] },
-            { id: "bf3", name: "Egg Breakfast Bowl", ingredients: "Eggs + Toast + Curd + Fruits", calories: 400, protein: 24, price: 179, image: "/uploads/egg_breakfast_bowl.webp", badges: ["High Protein", "Energy Boost"] },
-            { id: "bf4", name: "Poha Bowl", ingredients: "Poha + Paneer + Soya Chunks + Peanuts + Veggies", calories: 480, protein: 24, price: 149, image: "/uploads/poha_bowl.webp", badges: ["Clean Eating", "Energy Boost"] },
-            { id: "bf5", name: "Fruit n Oat Bowl", ingredients: "Oats + Mixed Fruits + Chia Seeds", calories: 320, protein: 9, price: 179, image: "/uploads/fruit_n oat_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
-            { id: "bf6", name: "Fruit n Nuts Bowl", ingredients: "Oats + Fruits + Nuts + Seeds Mix", calories: 500, protein: 11, price: 249, image: "/uploads/fruit_n_nuts_oat_bowl.webp", badges: ["Energy Boost", "Clean Eating"] },
-            { id: "bf7", name: "Sprouts Morning Bowl", ingredients: "Mixed Sprouts + Onion + Tomatoes + Cucumber + Coriander + Lemon + Chaat Masala", calories: 240, protein: 15, price: 199, image: "/uploads/sprout_morning_bowl.webp", badges: ["Low Calorie", "Clean Eating"] }
+            { id: "bf4", name: "Poha Bowl", ingredients: "Poha + Paneer + Soya Chunks + Peanuts + Veggies", calories: 480, protein: 24, carbs: 55, fats: 12, price: 149, image: "/uploads/poha_bowl.webp", badges: ["Clean Eating", "Energy Boost"] },
+            { id: "bf3", name: "Egg Breakfast Bowl", ingredients: "Eggs + Toast + Curd + Fruits", calories: 400, protein: 24, carbs: 30, fats: 17, price: 179, image: "/uploads/egg_breakfast_bowl.webp", badges: ["High Protein", "Energy Boost"] },
+            { id: "bf5", name: "Fruit n Oat Bowl", ingredients: "Oats + Mixed Fruits + Chia Seeds", calories: 320, protein: 9, carbs: 50, fats: 8, price: 179, image: "/uploads/fruit_n oat_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
+            { id: "bf1", name: "Chicken Breakfast Salad Bowl", ingredients: "Chicken + Quinoa + Cucumber + Tomatoes + Lettuce + Onion + Carrot + Curd + Mixed Seeds", calories: 450, protein: 36, carbs: 40, fats: 14, price: 189, image: "/uploads/chicken_quinoa_salad_bowl.webp", badges: ["High Protein", "Clean Eating"] },
+            { id: "bf2", name: "Paneer Breakfast Salad Bowl", ingredients: "Paneer + Quinoa + Cucumber + Cherry Tomatoes + Lettuce + Carrot + Curd + Flax or Chia Seeds", calories: 440, protein: 21, carbs: 38, fats: 16, price: 199, image: "/uploads/paneer_quinoa_salad_bowl.webp", badges: ["High Protein", "Low Calorie"] },
+            { id: "bf7", name: "Sprouts Morning Bowl", ingredients: "Mixed Sprouts + Onion + Tomatoes + Cucumber + Coriander + Lemon + Chaat Masala", calories: 240, protein: 15, carbs: 20, fats: 6, price: 199, image: "/uploads/sprout_morning_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
+            { id: "bf6", name: "Fruit n Nuts Bowl", ingredients: "Oats + Fruits + Nuts + Seeds Mix", calories: 500, protein: 11, carbs: 60, fats: 22, price: 249, image: "/uploads/fruit_n_nuts_oat_bowl.webp", badges: ["Energy Boost", "Clean Eating"] }
           ],
           "Guilt-Free Add-ons": [
-            { id: "gf1", name: "Whey Protein Berry Smoothie", ingredients: "Isolate Whey + Mixed Berries + Almond Milk (No Sugar)", calories: 180, protein: 25, price: 149, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
-            { id: "gf2", name: "Citrus Detox Water", ingredients: "Lemon + Mint + Cucumber + Chia Seeds", calories: 15, protein: 0, price: 69, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
-            { id: "gf3", name: "Keto Almond Brownie", ingredients: "Almond Flour + Dark Chocolate + Stevia + Whey Protein", calories: 210, protein: 12, price: 129, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true }
+            { id: "gf1", name: "Whey Protein Berry Smoothie", ingredients: "Isolate Whey + Mixed Berries + Almond Milk (No Sugar)", calories: 180, protein: 25, carbs: 10, fats: 3, price: 149, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
+            { id: "gf2", name: "Citrus Detox Water", ingredients: "Lemon + Mint + Cucumber + Chia Seeds", calories: 15, protein: 0, carbs: 3, fats: 0, price: 69, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
+            { id: "gf3", name: "Keto Almond Brownie", ingredients: "Almond Flour + Dark Chocolate + Stevia + Whey Protein", calories: 210, protein: 12, carbs: 8, fats: 14, price: 129, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true }
           ]
         };
 
@@ -104,8 +115,101 @@ import { createRoot } from 'react-dom/client';
           return MOISTURE_KEYWORDS.some(keyword => normalized.includes(keyword));
         };
 
-        const balancedMenuData = Object.fromEntries(
+        const builderIngredients = {
+          bases: [
+            { id: 'b1', name: 'White Rice', price: 0, calories: 104, protein: 1.6, carbs: 22.4, fats: 0.4 },
+            { id: 'b2', name: 'Brown Rice', price: 0, calories: 88, protein: 2.4, carbs: 19.2, fats: 0.6 },
+            { id: 'b3', name: 'Quinoa', price: 0, calories: 96, protein: 3.2, carbs: 16.8, fats: 1.4 },
+            { id: 'b4', name: 'Lettuce Mix', price: 0, calories: 10, protein: 1, carbs: 2, fats: 0.1 },
+            { id: 'b5', name: 'Spinach', price: 0, calories: 12, protein: 2, carbs: 1.5, fats: 0.2 },
+            { id: 'b6', name: 'Sprouts', price: 0, calories: 30, protein: 3, carbs: 5, fats: 0.2 }
+          ],
+          proteins: [
+            { id: 'p1', name: 'Grilled Chicken', price: 0, calories: 248, protein: 46.5, carbs: 0, fats: 5.3 },
+            { id: 'p2', name: 'Peri Peri Chicken', price: 0, calories: 263, protein: 45, carbs: 0, fats: 5.7 },
+            { id: 'p3', name: 'Paneer', price: 0, calories: 270, protein: 18, carbs: 9, fats: 21 },
+            { id: 'p4', name: 'Tofu', price: 0, calories: 144, protein: 15, carbs: 2, fats: 8 },
+            { id: 'p5', name: 'Soya Chunks', price: 0, calories: 110, protein: 16, carbs: 5, fats: 1 },
+            { id: 'p6', name: 'Chickpeas', price: 0, calories: 130, protein: 7, carbs: 22, fats: 2 },
+            { id: 'p7', name: 'Boiled Eggs', price: 0, calories: 155, protein: 13, carbs: 1, fats: 11 }
+          ],
+          veggies: [
+            { id: 'v1', name: 'Broccoli', price: 0, calories: 4.5, protein: 0.3, carbs: 0.8, fats: 0.0, premium: false },
+            { id: 'v2', name: 'Bell Peppers', price: 0, calories: 3.6, protein: 0.2, carbs: 0.8, fats: 0.0, premium: false },
+            { id: 'v3', name: 'Carrot', price: 0, calories: 3.8, protein: 0.2, carbs: 0.9, fats: 0.0, premium: false },
+            { id: 'v4', name: 'Cucumber', price: 0, calories: 2.4, protein: 0.2, carbs: 0.5, fats: 0.0, premium: false },
+            { id: 'v5', name: 'Cherry Tomatoes', price: 0, calories: 2.7, protein: 0.2, carbs: 0.6, fats: 0.0, premium: false },
+            { id: 'v6', name: 'Sweet Corn', price: 0, calories: 10.5, protein: 0.3, carbs: 2.3, fats: 0.2, premium: false },
+            { id: 'v7', name: 'Onion', price: 0, calories: 3.0, protein: 0.2, carbs: 0.6, fats: 0, premium: false },
+            { id: 'v8', name: 'Avocado (Premium)', price: 80, calories: 80, protein: 1, carbs: 4, fats: 7, premium: true }
+          ],
+          addons: [
+            { id: 'a1', name: 'Extra Chicken', price: 40, calories: 120, protein: 23, carbs: 0, fats: 3 },
+            { id: 'a2', name: 'Extra Paneer', price: 35, calories: 110, protein: 7, carbs: 3, fats: 8 },
+            { id: 'a3', name: 'Extra Egg', price: 15, calories: 78, protein: 6, carbs: 1, fats: 5 },
+            { id: 'a4', name: 'Extra Avocado', price: 80, calories: 80, protein: 1, carbs: 4, fats: 7 },
+            { id: 'a6', name: 'Greek Yogurt Dressing', price: 20, calories: 60, protein: 4, carbs: 4, fats: 2 },
+            { id: 'a9', name: 'Almonds', price: 20, calories: 35, protein: 1, carbs: 1, fats: 3 },
+            { id: 'a10', name: 'Peri Peri Sauce', price: 20, calories: 20, protein: 0, carbs: 2, fats: 0 },
+            { id: 'a11', name: 'Mint Yogurt (Curd)', price: 25, calories: 35, protein: 2, carbs: 4, fats: 1 },
+            { id: 'a12', name: 'Honey Mustard', price: 20, calories: 30, protein: 0, carbs: 6, fats: 0 }
+          ],
+          toppings: [
+            { id: 't2', name: 'Pumpkin Seeds', price: 0, calories: 30, protein: 2, carbs: 1, fats: 2 },
+            { id: 't3', name: 'Sunflower Seeds', price: 0, calories: 30, protein: 1, carbs: 1, fats: 2 },
+            { id: 't4', name: 'Sesame Seeds', price: 0, calories: 25, protein: 1, carbs: 1, fats: 2 },
+            { id: 't5', name: 'Mix Seeds', price: 0, calories: 35, protein: 2, carbs: 2, fats: 3 }
+          ],
+          dressings: [
+            { id: 'd1', name: 'Lemon', price: 0, calories: 5, protein: 0, carbs: 1, fats: 0 },
+            { id: 'd2', name: 'Black Pepper', price: 0, calories: 0, protein: 0, carbs: 0, fats: 0 },
+            { id: 'd3', name: 'Olive Oil', price: 0, calories: 45, protein: 0, carbs: 0, fats: 5 },
+            { id: 'd4', name: 'Classic Salt', price: 0, calories: 0, protein: 0, carbs: 0, fats: 0 },
+            { id: 'd5', name: 'Chaat Masala', price: 0, calories: 0, protein: 0, carbs: 0, fats: 0 },
+            { id: 'd6', name: 'Vinaigrette', price: 0, calories: 40, protein: 0, carbs: 2, fats: 4 },
+            { id: 'd7', name: 'Jalapeño', price: 0, calories: 0, protein: 0, carbs: 0, fats: 0 }
+          ]
+        };
+
+        const findBuilderIngredient = (ingredientId) => {
+          return Object.values(builderIngredients).flat().find(item => item.id === ingredientId);
+        };
+
+        const computeRecipeMacros = (recipe = []) => {
+          const totals = { calories: 0, protein: 0, carbs: 0, fats: 0 };
+
+          recipe.forEach(({ id, qty = 1 }) => {
+            const ingredient = findBuilderIngredient(id);
+            if (!ingredient) return;
+            totals.calories += (ingredient.calories || 0) * qty;
+            totals.protein += (ingredient.protein || 0) * qty;
+            totals.carbs += (ingredient.carbs || 0) * qty;
+            totals.fats += (ingredient.fats || 0) * qty;
+          });
+
+          return {
+            calories: Number(totals.calories.toFixed(1)),
+            protein: Number(totals.protein.toFixed(1)),
+            carbs: Number(totals.carbs.toFixed(1)),
+            fats: Number(totals.fats.toFixed(1))
+          };
+        };
+
+        const menuDataWithCalculatedMacros = Object.fromEntries(
           Object.entries(menuData).map(([category, items]) => {
+            const mappedItems = items.map(item => {
+              if (!item.recipe) return item;
+              return {
+                ...item,
+                ...computeRecipeMacros(item.recipe)
+              };
+            });
+            return [category, mappedItems];
+          })
+        );
+
+        const balancedMenuData = Object.fromEntries(
+          Object.entries(menuDataWithCalculatedMacros).map(([category, items]) => {
             const balancedItems = items.map((item) => {
               if (item.upcoming || menuItemHasMoisture(item.ingredients)) {
                 return item;
@@ -126,61 +230,6 @@ import { createRoot } from 'react-dom/client';
             return [category, balancedItems];
           })
         );
-
-        const builderIngredients = {
-          bases: [
-            { id: 'b1', name: 'White Rice', price: 0, calories: 130, protein: 2, carbs: 28, fats: 0.5 },
-            { id: 'b2', name: 'Brown Rice', price: 0, calories: 110, protein: 3, carbs: 24, fats: 0.8 },
-            { id: 'b3', name: 'Quinoa', price: 0, calories: 120, protein: 4, carbs: 21, fats: 1.8 },
-            { id: 'b4', name: 'Lettuce Mix', price: 0, calories: 10, protein: 1, carbs: 2, fats: 0.1 },
-            { id: 'b5', name: 'Spinach', price: 0, calories: 12, protein: 2, carbs: 1.5, fats: 0.2 },
-            { id: 'b6', name: 'Sprouts', price: 0, calories: 30, protein: 3, carbs: 5, fats: 0.2 }
-          ],
-          proteins: [
-            { id: 'p1', name: 'Grilled Chicken', price: 0, calories: 165, protein: 31, carbs: 0, fats: 3.5 },
-            { id: 'p2', name: 'Peri Peri Chicken', price: 0, calories: 175, protein: 30, carbs: 0, fats: 3.8 },
-            { id: 'p3', name: 'Paneer', price: 0, calories: 180, protein: 12, carbs: 6, fats: 14 },
-            { id: 'p4', name: 'Tofu', price: 0, calories: 144, protein: 15, carbs: 2, fats: 8 },
-            { id: 'p5', name: 'Soya Chunks', price: 0, calories: 110, protein: 16, carbs: 5, fats: 1 },
-            { id: 'p6', name: 'Chickpeas', price: 0, calories: 130, protein: 7, carbs: 22, fats: 2 },
-            { id: 'p7', name: 'Boiled Eggs', price: 0, calories: 155, protein: 13, carbs: 1, fats: 11 }
-          ],
-          veggies: [
-            { id: 'v1', name: 'Broccoli', price: 0, calories: 30, protein: 2, carbs: 5, fats: 0.2, premium: false },
-            { id: 'v2', name: 'Bell Peppers', price: 0, calories: 24, protein: 1, carbs: 5, fats: 0.2, premium: false },
-            { id: 'v3', name: 'Carrot', price: 0, calories: 25, protein: 1, carbs: 6, fats: 0.1, premium: false },
-            { id: 'v4', name: 'Cucumber', price: 0, calories: 16, protein: 1, carbs: 3, fats: 0.1, premium: false },
-            { id: 'v5', name: 'Cherry Tomatoes', price: 0, calories: 18, protein: 1, carbs: 4, fats: 0.1, premium: false },
-            { id: 'v6', name: 'Sweet Corn', price: 0, calories: 70, protein: 2, carbs: 15, fats: 1, premium: false },
-            { id: 'v7', name: 'Onion', price: 0, calories: 20, protein: 1, carbs: 4, fats: 0, premium: false },
-            { id: 'v8', name: 'Avocado (Premium)', price: 80, calories: 80, protein: 1, carbs: 4, fats: 7, premium: true }
-          ],
-          addons: [
-            { id: 'a1', name: 'Extra Chicken', price: 40, calories: 120, protein: 23, carbs: 0, fats: 3 },
-            { id: 'a2', name: 'Extra Paneer', price: 35, calories: 110, protein: 7, carbs: 3, fats: 8 },
-            { id: 'a3', name: 'Extra Egg', price: 20, calories: 78, protein: 6, carbs: 1, fats: 5 },
-            { id: 'a4', name: 'Extra Avocado', price: 80, calories: 80, protein: 1, carbs: 4, fats: 7 },
-            { id: 'a5', name: 'Cheese', price: 30, calories: 90, protein: 5, carbs: 1, fats: 7 },
-            { id: 'a6', name: 'Greek Yogurt Dressing', price: 40, calories: 60, protein: 4, carbs: 4, fats: 2 },
-            { id: 'a7', name: 'Hummus Dip', price: 50, calories: 90, protein: 3, carbs: 8, fats: 5 },
-            { id: 'a8', name: 'Guacamole', price: 50, calories: 95, protein: 2, carbs: 5, fats: 8 }
-          ],
-          toppings: [
-            { id: 't1', name: 'Almonds', price: 0, calories: 35, protein: 1, carbs: 1, fats: 3 },
-            { id: 't2', name: 'Pumpkin Seeds', price: 0, calories: 30, protein: 2, carbs: 1, fats: 2 },
-            { id: 't3', name: 'Sunflower Seeds', price: 0, calories: 30, protein: 1, carbs: 1, fats: 2 },
-            { id: 't4', name: 'Sesame Seeds', price: 0, calories: 25, protein: 1, carbs: 1, fats: 2 },
-            { id: 't5', name: 'Mix Seeds', price: 0, calories: 35, protein: 2, carbs: 2, fats: 3 }
-          ],
-          dressings: [
-            { id: 'd1', name: 'Lemon + Black Pepper', price: 0, calories: 5, protein: 0, carbs: 1, fats: 0 },
-            { id: 'd2', name: 'Olive Oil', price: 0, calories: 45, protein: 0, carbs: 0, fats: 5 },
-            { id: 'd3', name: 'Peri Peri Sauce', price: 0, calories: 20, protein: 0, carbs: 2, fats: 0 },
-            { id: 'd4', name: 'Mint Yogurt (Curd)', price: 0, calories: 35, protein: 2, carbs: 4, fats: 1 },
-            { id: 'd5', name: 'Honey Mustard', price: 0, calories: 30, protein: 0, carbs: 6, fats: 0 },
-            { id: 'd6', name: 'Classic Salt & Pepper', price: 0, calories: 2, protein: 0, carbs: 0, fats: 0 }
-          ]
-        };
 
         const categories = Object.keys(balancedMenuData);
 
@@ -291,8 +340,6 @@ import { createRoot } from 'react-dom/client';
         };
 
         function App() {
-          console.log('🔄 App component rendering...');
-          
           // Menu scroll management state
           const [activeMenuTab, setActiveMenuTab] = useState(categories[0]);
           const scrollContainerRef = useRef(null);
@@ -303,17 +350,20 @@ import { createRoot } from 'react-dom/client';
           const [isCartOpen, setIsCartOpen] = useState(false);
           const [isCheckoutStep, setIsCheckoutStep] = useState(false);
           const [toast, setToast] = useState({ message: '', visible: false });
-          const [userDetails, setUserDetails] = useState({ name: '', phone: '', deliveryType: 'home', address: '', dateOffset: 0, dateLabel: '', dateValue: '', timeSlot: '', gymPromoCode: '' });
+          const [userDetails, setUserDetails] = useState({ name: '', phone: '', deliveryType: 'home', address: '', landmark: '', dateOffset: 0, dateLabel: '', dateValue: '', timeSlot: '', gymPromoCode: '' });
           const [availableDates, setAvailableDates] = useState([]);
           const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+          const [promoMessage, setPromoMessage] = useState({ type: '', text: '' }); // 'error' or 'success'
+          const [appliedPromoCode, setAppliedPromoCode] = useState('');
+          const [promoInputValue, setPromoInputValue] = useState('');
           
-          // Define your valid gym codes and their discount percentages here
+          // Valid promo codes with discount percentages
           const VALID_PROMO_CODES = {
-              'PMP10': 0.10,     // 10% off
-              'FFULE10': 0.10,   // 10% off
-              'NEULFIT10': 0.10, // 10% off
-              'FIRST10': 0.10,   // 10% off
-              'TUB10': 0.10      // 10% off
+              'PMP5': 0.05,      // 5% off
+              'FFULE5': 0.05,    // 5% off
+              'NEULFIT5': 0.05,  // 5% off
+              'FIRST5': 0.05,    // 5% off
+              'TUB5': 0.05       // 5% off
           };
 
           const BASE_BOWL_PRICE = 199;
@@ -488,9 +538,19 @@ import { createRoot } from 'react-dom/client';
               }
           };
 
+          const getAddonIcon = (addonName) => {
+              if (/egg/i.test(addonName)) return '🥚';
+              if (/avocado/i.test(addonName)) return '🥑';
+              if (/cheese/i.test(addonName)) return '🧀';
+              if (/yogurt|curd/i.test(addonName)) return '🥛';
+              if (/hummus/i.test(addonName)) return '🥄';
+              if (/guacamole/i.test(addonName)) return '🥑';
+              return '✨';
+          };
+
           const toggleCartAddon = (cartIndex, addon) => {
               setCart(prevCart => prevCart.map((item, idx) => {
-                  if (idx !== cartIndex || !item.isCustom) return item;
+                  if (idx !== cartIndex) return item;
                   const existing = Array.isArray(item.customAddons) ? item.customAddons : [];
                   const isSelected = existing.includes(addon.name);
                   const nextAddons = isSelected ? existing.filter(name => name !== addon.name) : [...existing, addon.name];
@@ -504,9 +564,31 @@ import { createRoot } from 'react-dom/client';
           };
 
           const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
-          const discountMultiplier = VALID_PROMO_CODES[userDetails.gymPromoCode] || 0;
+          const discountMultiplier = VALID_PROMO_CODES[appliedPromoCode] || 0;
           const discountAmount = Math.floor(cartTotal * discountMultiplier);
           const finalTotal = cartTotal - discountAmount;
+
+          const applyPromoCode = () => {
+              const code = promoInputValue.toUpperCase().trim();
+              if (!code) {
+                  setPromoMessage({ type: 'error', text: '❌ Please enter a promo code' });
+                  return;
+              }
+              if (VALID_PROMO_CODES[code]) {
+                  setAppliedPromoCode(code);
+                  setPromoMessage({ type: 'success', text: `✅ Code applied! ${VALID_PROMO_CODES[code] * 100}% off` });
+                  setPromoInputValue('');
+              } else {
+                  setPromoMessage({ type: 'error', text: '❌ Invalid or expired promo code' });
+                  setPromoInputValue('');
+              }
+          };
+
+          const removePromoCode = () => {
+              setAppliedPromoCode('');
+              setPromoInputValue('');
+              setPromoMessage({ type: '', text: '' });
+          };
 
           const formatOrderDatePart = () => {
               const now = new Date();
@@ -525,25 +607,7 @@ import { createRoot } from 'react-dom/client';
               return `${hour}${minutes}${meridiem.charAt(0)}`;
           };
 
-          const randomCode = (length = 4) => {
-              const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-              const cryptoApi = window.crypto || window.msCrypto;
-              if (cryptoApi && cryptoApi.getRandomValues) {
-                  const values = new Uint32Array(length);
-                  cryptoApi.getRandomValues(values);
-                  return Array.from(values, value => chars[value % chars.length]).join('');
-              }
-              let code = '';
-              for (let i = 0; i < length; i++) code += chars[Math.floor(Math.random() * chars.length)];
-              return code;
-          };
-
-          const generateOrderId = (slot) => {
-              const prefix = `TUB-${formatOrderDatePart()}-${formatSlotPart(slot)}-`;
-              return `${prefix}${randomCode()}`;
-          };
-
-          const finalizeOrder = (e) => {
+          const finalizeOrder = async (e) => {
               e.preventDefault();
               if (!userDetails.name || !userDetails.phone || !userDetails.address) return;
               
@@ -562,36 +626,45 @@ import { createRoot } from 'react-dom/client';
                   return text;
               }).join('\n');
 
-              const orderId = generateOrderId(userDetails.timeSlot);
-
               const orderPayload = {
-                  orderId: orderId,
                   name: userDetails.name,
                   phone: userDetails.phone,
                   deliveryType: userDetails.deliveryType,
                   address: userDetails.address,
+                  landmark: userDetails.landmark,
                   items: itemsList,
                   totalPrice: finalTotal,
                   deliveryDate: userDetails.dateValue || userDetails.dateLabel,
                   deliveryDateLabel: userDetails.dateLabel,
                   timeSlot: userDetails.timeSlot,
-                  gymPromoCode: userDetails.gymPromoCode
+                  gymPromoCode: appliedPromoCode
               };
 
-              // Send order to the local server API for persistence
-              fetch('/api/orders', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(orderPayload)
-              }).catch(err => console.error("Error saving on server:", err));
+              let orderId = 'TUB-xxxx-xxxx-9701';
+
+              try {
+                  const response = await fetch('/api/orders', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(orderPayload)
+                  });
+                  const data = await response.json();
+                  if (data && data.orderId) {
+                      orderId = data.orderId;
+                  }
+              } catch (err) {
+                  console.error("Error saving on server:", err);
+              }
 
               let message = `*New Order from TUB Fit*\n*Order ID:* ${orderId}\n\n`;
               message += `*Customer Details:*\n👤 Name: ${userDetails.name}\n📱 Phone: ${userDetails.phone}\n📍 Delivery To: ${userDetails.deliveryType.toUpperCase()}\n📅 Date: ${userDetails.dateLabel}\n⏰ Time Slot: ${userDetails.timeSlot}\n🏠 Address/Location: ${userDetails.address}\n`;
-              if (userDetails.gymPromoCode) message += `🏷️ Gym Code: ${userDetails.gymPromoCode}\n`;
+              if (userDetails.landmark) {
+                  message += `📍 Landmark: ${userDetails.landmark}\n`;
+              }
               message += `\n*Order Items:*\n${itemsList}\n`;
               
               if (discountAmount > 0) {
-                  message += `\n*Subtotal: ₹${cartTotal}*\n*Discount (${userDetails.gymPromoCode}): -₹${discountAmount}*\n*Final Amount: ₹${finalTotal}*`;
+                  message += `\n*Subtotal: ₹${cartTotal}*\n*Discount (${appliedPromoCode}): -₹${discountAmount}*\n*Final Amount: ₹${finalTotal}*`;
               } else {
                   message += `\n*Total Amount: ₹${finalTotal}*`;
               }
@@ -600,7 +673,9 @@ import { createRoot } from 'react-dom/client';
               setIsCartOpen(false);
               setCart([]);
               setIsCheckoutStep(false);
-              setUserDetails(prev => ({...prev, gymPromoCode: ''}));
+              setAppliedPromoCode('');
+              setPromoInputValue('');
+              setPromoMessage({ type: '', text: '' });
           };
 
           const openSubscription = (planName) => {
@@ -672,7 +747,7 @@ import { createRoot } from 'react-dom/client';
           const DRESSING_FREE_LIMIT = 1;
           const VEGGIE_EXTRA_PRICE = 15;
           const TOPPING_EXTRA_PRICE = 15;
-          const DRESSING_EXTRA_PRICE = 20;
+          const DRESSING_EXTRA_PRICE = 10;
           const DRY_BASE_IDS = ['b1', 'b2', 'b3', 'b6'];
           const DRY_PROTEIN_IDS = ['p1', 'p2', 'p5', 'p7'];
           const DRY_VEGGIE_IDS = ['v1', 'v2', 'v3', 'v6', 'v7'];
@@ -681,8 +756,8 @@ import { createRoot } from 'react-dom/client';
           const MOIST_BASE_IDS = ['b4', 'b5'];
           const MOIST_PROTEIN_IDS = ['p3', 'p4', 'p6'];
           const MOIST_VEGGIE_IDS = ['v4', 'v5', 'v8'];
-          const MOIST_ADDON_IDS = ['a4', 'a6', 'a7', 'a8'];
-          const DRY_UPSELL_ADDON_IDS = ['a6', 'a7', 'a8'];
+          const MOIST_ADDON_IDS = ['a4', 'a6'];
+          const DRY_UPSELL_ADDON_IDS = ['a4', 'a6'];
 
           const selectedIngredientEntries = [
             selectedBase ? { group: 'base', id: selectedBase.id } : null,
@@ -853,13 +928,52 @@ import { createRoot } from 'react-dom/client';
           const steps = [
             { id: 'base', title: '1. Choose Your Base', description: 'Single choice. Pick one foundational bowl base.', icon: 'fa-bowl-food', items: builderIngredients.bases, action: selectBase, selected: selectedBase, isSingle: true },
             { id: 'protein', title: '2. Choose Your Protein', description: 'Single choice. Select your protein source.', icon: 'fa-dumbbell', items: builderIngredients.proteins, action: selectProtein, selected: selectedProtein, isSingle: true },
-            { id: 'veggies', title: '3. Choose Your Veggies', description: 'Multi-choice. First 4 veggies are included, premium Avocado adds \u20B980.', icon: 'fa-leaf', items: builderIngredients.veggies, action: toggleVeggie, selected: selectedVeggies, isSingle: false },
-                        { id: 'toppings', title: '4. Choose Your Toppings', description: 'Multi-choice. First 2 toppings are included, extras add ₹15.', icon: 'fa-seedling', items: builderIngredients.toppings, action: toggleTopping, selected: selectedToppings, isSingle: false },
-            { id: 'dressings', title: '5. Choose Dressings', description: 'Multi-choice. First dressing included, extras add INR 20. Dressing is recommended for dry bowls.', icon: 'fa-prescription-bottle', items: builderIngredients.dressings, action: toggleDressing, selected: selectedDressings, isSingle: false },
+            { id: 'veggies', title: '3. Choose Your Veggies', description: (<>
+                <div className="flex items-center gap-2 text-sm text-gray-600 leading-tight">
+                  <span>🥦</span>
+                  <span><strong className="font-semibold text-gray-900">4 veggies included</strong></span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600 leading-tight">
+                  <span>🥑</span>
+                  <span>Avocado +₹80</span>
+                </div>
+              </>), icon: 'fa-leaf', items: builderIngredients.veggies, action: toggleVeggie, selected: selectedVeggies, isSingle: false },
+            { id: 'toppings', title: '4. Choose Your Toppings', description: (<>
+                <div className="flex items-center gap-2 text-sm text-gray-600 leading-tight">
+                  <span>🥜</span>
+                  <span><strong className="font-semibold text-gray-900">2 toppings included</strong></span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600 leading-tight">
+                  <span>➕</span>
+                  <span>Extras add ₹15</span>
+                </div>
+              </>), icon: 'fa-seedling', items: builderIngredients.toppings, action: toggleTopping, selected: selectedToppings, isSingle: false },
+            { id: 'dressings', title: '5. Choose Dressings', description: (<>
+                <div className="flex items-center gap-2 text-sm text-gray-600 leading-tight">
+                  <span>🥗</span>
+                  <span><strong className="font-semibold text-gray-900">1 dressing included</strong></span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600 leading-tight">
+                  <span>➕</span>
+                  <span>Extras add ₹10</span>
+                </div>
+              </>), icon: 'fa-prescription-bottle', items: builderIngredients.dressings, action: toggleDressing, selected: selectedDressings, isSingle: false },
           ];
 
           const currentStep = steps[currentStepIndex];
+          const stepItems = currentStep.id === 'addons'
+            ? currentStep.items.filter(opt => ['Extra Egg', 'Extra Avocado', 'Greek Yogurt Dressing'].includes(opt.name))
+            : currentStep.items;
           const canProceedToNext = currentStep.id === 'base' ? !!selectedBase : currentStep.id === 'protein' ? !!selectedProtein : true;
+          const canFinishCustom = currentStep.id === 'dressings' ? selectedDressings.length > 0 : true;
+          const isFinalCustomStep = currentStepIndex === steps.length - 1;
+
+          const goToSummaryCard = () => {
+            const summaryCard = document.getElementById('summary-card');
+            if (summaryCard) {
+              summaryCard.scrollIntoView({ behavior: 'smooth' });
+            }
+          };
 
           return (
             <div className="bg-white text-gray-800 selection:bg-green-200 pb-20 md:pb-0 relative">
@@ -910,7 +1024,7 @@ import { createRoot } from 'react-dom/client';
                                                       <span className="font-semibold">Add-ons:</span> {item.customAddons.join(', ')}
                                                     </p>
                                                   )}
-                                                  {item.isCustom && (
+                                                  {(
                                                     <div className="mt-3 rounded-xl border border-green-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-3 shadow-sm w-full">
                                                       <div className="flex items-center justify-between mb-2">
                                                         <p className="text-[11px] font-bold text-green-800 uppercase tracking-wide">Customize Add-ons</p>
@@ -918,7 +1032,6 @@ import { createRoot } from 'react-dom/client';
                                                       </div>
                                                       <div className="flex gap-2 w-full overflow-x-auto pb-1 pr-1 hide-scrollbar">
                                                         {builderIngredients.addons
-                                                        .filter((addon) => ['Extra Egg', 'Cheese', 'Greek Yogurt Dressing', 'Extra Avocado'].includes(addon.name))
                                                         .map((rawAddon) => {
                                                           const addon = rawAddon.name === 'Extra Avocado' ? { ...rawAddon, name: 'Avocado', price: 80 } : rawAddon.name === 'Extra Egg' ? { ...rawAddon, name: 'Eggs' } : rawAddon.name === 'Greek Yogurt Dressing' ? { ...rawAddon, name: 'Yogurt' } : rawAddon;
                                                           const selected = (item.customAddons || []).includes(addon.name);
@@ -931,7 +1044,7 @@ import { createRoot } from 'react-dom/client';
                                                             >
                                                               <div className="flex flex-col items-start gap-1 min-h-[42px] min-w-0 w-full">
                                                                 <span className={`text-[11px] font-semibold leading-tight break-words [overflow-wrap:anywhere] w-full ${selected ? 'text-green-900' : 'text-gray-700'}`}>
-                                                                  {addon.name}
+                                                                  {getAddonIcon(addon.name)} {addon.name}
                                                                 </span>
                                                                 <span className={`text-[10px] font-bold whitespace-nowrap px-2 py-0.5 rounded-full ${selected ? 'text-green-800 bg-white/80' : 'text-green-700 bg-green-50'}`}>
                                                                   {addon.price > 0 ? `+\u20B9${addon.price}` : 'Free'}
@@ -954,7 +1067,7 @@ import { createRoot } from 'react-dom/client';
                                           </div>
                                           {discountAmount > 0 && (
                                               <div className="flex justify-between items-center text-sm mb-2 text-green-600">
-                                                  <span>Discount ({userDetails.gymPromoCode})</span>
+                                                  <span>Discount ({appliedPromoCode})</span>
                                                   <span className="font-semibold">-₹{discountAmount}</span>
                                               </div>
                                           )}
@@ -991,7 +1104,7 @@ import { createRoot } from 'react-dom/client';
                                               </div>
                                               {discountAmount > 0 && (
                                                   <div className="flex justify-between text-xs mb-1 text-green-600">
-                                                      <span>Discount ({userDetails.gymPromoCode})</span>
+                                                      <span>Discount ({appliedPromoCode})</span>
                                                       <span className="font-semibold">-₹{discountAmount}</span>
                                                   </div>
                                               )}
@@ -1045,13 +1158,30 @@ import { createRoot } from 'react-dom/client';
                                                   <i className="fas fa-dumbbell"></i> Gym
                                               </label>
                                           </div>
-                                          <textarea required className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500 h-28 resize-none transition-all" value={userDetails.address} onChange={e => setUserDetails({...userDetails, address: e.target.value})} placeholder={userDetails.deliveryType === 'home' ? "House/Flat No, Building, Area, Landmark..." : "Gym Name, Sector/Area, Landmark..."}></textarea>
+                                          <textarea required className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500 h-28 resize-none transition-all" value={userDetails.address} onChange={e => setUserDetails({...userDetails, address: e.target.value})} placeholder={userDetails.deliveryType === 'home' ? "House/Flat No, Building, Area..." : "Gym Name, Sector/Area..."}></textarea>
                                       </div>
-                                      <div>
-                                          <label className="block text-sm font-semibold text-gray-700 mb-1">Gym Promo Code (Optional)</label>
-                                          <input type="text" name="promo_code_no_autofill" autoComplete="off" className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all uppercase" value={userDetails.gymPromoCode} onChange={e => setUserDetails({...userDetails, gymPromoCode: e.target.value.toUpperCase()})} placeholder="e.g. TUB10" />
-                                          {userDetails.gymPromoCode && discountAmount === 0 && <p className="text-xs text-red-500 mt-1">Invalid or expired promo code.</p>}
-                                          {discountAmount > 0 && <p className="text-xs text-green-600 mt-1"><i className="fas fa-check-circle"></i> Code applied successfully! ({discountMultiplier * 100}% off)</p>}
+                                      <div className="mt-4">
+                                          <label className="block text-sm font-semibold text-gray-700 mb-2">Landmark (Optional)</label>
+                                          <input type="text" className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all" value={userDetails.landmark} onChange={e => setUserDetails({...userDetails, landmark: e.target.value})} placeholder={userDetails.deliveryType === 'home' ? "Landmark, e.g. Near Metro Station" : "Landmark or entrance note"} />
+                                      </div>
+                                      <div className="mt-4">
+                                          <label className="block text-sm font-semibold text-gray-700 mb-2">Gym Promo Code (Optional)</label>
+                                          {appliedPromoCode ? (
+                                              <div className="flex gap-2 items-center">
+                                                  <div className="flex-1 p-3.5 bg-green-50 border border-green-300 rounded-xl font-semibold text-green-700">
+                                                      ✅ {appliedPromoCode} - {VALID_PROMO_CODES[appliedPromoCode] * 100}% off applied
+                                                  </div>
+                                                  <button type="button" onClick={removePromoCode} className="bg-red-500 text-white px-4 py-3.5 rounded-xl font-bold hover:bg-red-600 transition-all">Remove</button>
+                                              </div>
+                                          ) : (
+                                              <div className="flex gap-2">
+                                                  <input type="text" name="promo_code_no_autofill" autoComplete="off" className="flex-1 p-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all uppercase" value={promoInputValue} onChange={e => setPromoInputValue(e.target.value.toUpperCase())} placeholder="Enter promo code" />
+                                                  <button type="button" onClick={applyPromoCode} className="bg-green-600 text-white px-6 py-3.5 rounded-xl font-bold hover:bg-green-700 transition-all">Apply</button>
+                                              </div>
+                                          )}
+                                          {promoMessage.text && (
+                                              <p className={`text-xs mt-2 font-semibold ${promoMessage.type === 'error' ? 'text-red-500' : 'text-green-600'}`}>{promoMessage.text}</p>
+                                          )}
                                       </div>
                                   </form>
                               )}
@@ -1166,11 +1296,11 @@ import { createRoot } from 'react-dom/client';
                        <div className="absolute inset-0 bg-green-400/20 rounded-full blur-3xl transform scale-110"></div>
                        
                        <div className="relative rounded-full aspect-square overflow-hidden shadow-2xl ring-[12px] ring-white hover:scale-105 transition-transform duration-700 ease-out z-10">
-                         <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800" alt="Premium Fitness Bowl" className="w-full h-full object-cover" fetchpriority="high" />
+                         <img src="/hero_section.webp" alt="Premium Fitness Bowl" className="w-full h-full object-cover" fetchpriority="high" />
                        </div>
 
                        {/* Floating Badges */}
-                       <div className="absolute top-10 -left-6 bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20 animate-bounce" style={{ animationDuration: '3s' }}>
+                       <div className="absolute top-10 left-2 sm:-left-6 bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20 animate-bounce" style={{ animationDuration: '3s' }}>
                           <div className="w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center text-sm">
                             <i className="fas fa-fire"></i>
                           </div>
@@ -1180,13 +1310,13 @@ import { createRoot } from 'react-dom/client';
                           </div>
                        </div>
 
-                       <div className="absolute bottom-20 -right-8 bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
+                       <div className="absolute bottom-20 right-2 sm:-right-8 bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
                           <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center text-sm">
                             <i className="fas fa-dumbbell"></i>
                           </div>
                           <div>
                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Protein</p>
-                            <p className="text-sm font-black text-gray-800">Up to 60g</p>
+                            <p className="text-sm font-black text-gray-800">100g</p>
                           </div>
                        </div>
 
@@ -1214,6 +1344,18 @@ import { createRoot } from 'react-dom/client';
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="text-center mb-8">
                     <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Premium Menu</h3>
+                    <div className="flex justify-center mb-3">
+                      <div className="text-2xl animate-bounce text-green-600">
+                        <i className="fas fa-hand-pointer mr-1"></i>
+                        <i className="fas fa-arrow-right text-lg" style={{ animation: 'slideRight 1.5s ease-in-out infinite' }}></i>
+                      </div>
+                      <style>{`
+                        @keyframes slideRight {
+                          0%, 100% { transform: translateX(0); opacity: 0.5; }
+                          50% { transform: translateX(8px); opacity: 1; }
+                        }
+                      `}</style>
+                    </div>
                     <p className="text-gray-500 max-w-2xl mx-auto mb-4">Swipe to view our bowls designed to help you reach your goals.</p>
                     <p className="text-xs text-gray-400 max-w-2xl mx-auto mb-6">👉 Nutritional values are approximate</p>
 
@@ -1286,19 +1428,36 @@ import { createRoot } from 'react-dom/client';
                                   </div>
                                   <div className="p-6 flex flex-col flex-1 bg-gray-50">
                                     <h4 className="text-xl font-bold text-gray-900 mb-2">{item.name}</h4>
-                                    <p className="text-sm text-gray-500 mb-6 flex-1 line-clamp-3">
-                                      <span className="font-semibold text-gray-700">Ingredients:</span>{' '}
-                                      {item.upcoming ? (
+                                    {item.upcoming ? (
+                                      <p className="text-sm text-gray-500 mb-6 flex-1 line-clamp-3">
+                                        <span className="font-semibold text-gray-700">Ingredients:</span>{' '}
                                         <span className="blur-[4px] select-none text-gray-400 font-medium">Classified chef secret blend...</span>
-                                      ) : item.ingredients}
-                                    </p>
-                                    <div className="flex items-center gap-2 mb-6">
-                                      <div className="flex-1 bg-orange-50 text-orange-700 px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 border border-orange-100">
-                                        <i className="fas fa-fire"></i> {item.upcoming ? '???' : `~${item.calories} kcal`}
+                                      </p>
+                                    ) : (
+                                      <p className="text-sm text-gray-500 mb-6 flex-1 line-clamp-3">
+                                        <span className="font-semibold text-gray-700">Ingredients:</span>{' '}
+                                        {item.ingredients}
+                                      </p>
+                                    )}
+                                    <div className="flex flex-col gap-2 mb-6">
+                                      <div className="flex items-center gap-2">
+                                        <div className="flex-1 bg-orange-50 text-orange-700 px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 border border-orange-100">
+                                          <i className="fas fa-fire"></i> {item.upcoming ? '???' : `~${item.calories} kcal`}
+                                        </div>
+                                        <div className="flex-1 bg-blue-50 text-blue-700 px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 border border-blue-100">
+                                          <i className="fas fa-dumbbell"></i> {item.upcoming ? '???' : `~${item.protein}g P`}
+                                        </div>
                                       </div>
-                                      <div className="flex-1 bg-blue-50 text-blue-700 px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 border border-blue-100">
-                                        <i className="fas fa-dumbbell"></i> {item.upcoming ? '???' : `~${item.protein}g P`}
-                                      </div>
+                                      {(item.carbs !== undefined || item.fats !== undefined) && (
+                                        <div className="flex items-center gap-2">
+                                          <div className="flex-1 bg-emerald-50 text-emerald-700 px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 border border-emerald-100">
+                                            <i className="fas fa-seedling"></i> {item.upcoming ? '???' : `~${formatMacroValue(item.carbs)}g Carbs`}
+                                          </div>
+                                          <div className="flex-1 bg-pink-50 text-pink-700 px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 border border-pink-100">
+                                            <i className="fas fa-droplet"></i> {item.upcoming ? '???' : `~${formatMacroValue(item.fats)}g Fats`}
+                                          </div>
+                                        </div>
+                                      )}
                                     </div>
                                     
                                     {item.upcoming ? (
@@ -1329,7 +1488,7 @@ import { createRoot } from 'react-dom/client';
                               
                               {/* Visual Divider between categories */}
                               {catIndex < categories.length - 1 && (
-                                  <div className="min-w-[10vw] sm:min-w-[60px] shrink-0 snap-center flex flex-col items-center justify-center opacity-40">
+                                  <div className="min-w-[16px] sm:min-w-[60px] shrink-0 snap-center flex flex-col items-center justify-center opacity-40">
                                       <div className="h-12 w-[2px] bg-gray-300 rounded-full mb-2"></div>
                                       <i className="fas fa-chevron-right text-gray-400 text-sm"></i>
                                       <div className="h-12 w-[2px] bg-gray-300 rounded-full mt-2"></div>
@@ -1338,7 +1497,7 @@ import { createRoot } from 'react-dom/client';
                           </React.Fragment>
                       ))}
 
-                      <div className="min-w-[10vw] sm:hidden shrink-0"></div>
+                      <div className="min-w-[16px] sm:hidden shrink-0"></div>
                     </div>
                     
                     <p className="text-[10px] text-gray-400 text-center mt-6 italic">* All macros are calculated raw-weight by our certified nutritionists. ±5% variance may occur.</p>
@@ -1382,8 +1541,9 @@ import { createRoot } from 'react-dom/client';
 
                           {true ? (
                             <>
+                              <div className="text-sm text-gray-600 mb-4 md:mb-6 space-y-1">{currentStep.description}</div>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 content-start max-h-[48vh] md:max-h-none overflow-y-auto pr-1">
-                                {currentStep.items.map(opt => {
+                                {stepItems.map(opt => {
                                   const isSelected = currentStep.isSingle
                                     ? currentStep.selected?.id === opt.id
                                     : currentStep.selected.some(item => item.id === opt.id);
@@ -1430,16 +1590,15 @@ import { createRoot } from 'react-dom/client';
                                       </div>
                                       <div className="text-[11px] md:text-xs text-gray-500 flex flex-wrap gap-x-2 gap-y-1 mt-1">
                                         <span className="font-medium text-green-700">{premiumTag || label}</span>
-                                        <span>•</span><span>{opt.calories} kcal</span>
-                                        <span>•</span><span>{opt.protein}g P</span>
+                                        <span>•</span><span>~{formatMacroValue(opt.calories)} kcal</span>
+                                        <span>•</span><span>~{formatMacroValue(opt.protein)}g P</span>
                                       </div>
-                                      {opt.carbs !== undefined && <div className="text-[11px] md:text-xs text-gray-400 mt-1">{opt.carbs}g Carbs • {opt.fats}g Fats</div>}
+                                      {opt.carbs !== undefined && <div className="text-[11px] md:text-xs text-gray-400 mt-1">~{formatMacroValue(opt.carbs)}g Carbs • ~{formatMacroValue(opt.fats)}g Fats</div>}
                                       {selectedChargeNote && <div className="text-[11px] md:text-xs text-orange-600 font-medium mt-1">{selectedChargeNote}</div>}
                                     </button>
                                   );
                                 })}
                               </div>
-                              <p className="text-xs md:text-sm text-gray-500 mt-3 md:mt-4">{currentStep.description}</p>
                             </>
                           ) : (
                             <div className="space-y-4">
@@ -1479,9 +1638,9 @@ import { createRoot } from 'react-dom/client';
                                 Next <i className="fas fa-chevron-right"></i>
                               </button>
                            ) : (
-                              <a href="#summary-card" className="md:hidden bg-green-500 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-green-500/20">
-                                Your Bowl <i className="fas fa-arrow-down"></i>
-                              </a>
+                              <button disabled={!canFinishCustom} onClick={goToSummaryCard} className={`px-6 py-3 rounded-xl font-bold flex items-center gap-2 text-sm md:text-base transition-all ${canFinishCustom ? 'bg-green-500 text-white hover:bg-emerald-500 shadow-lg shadow-green-500/20' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
+                                {canFinishCustom ? 'Your Bowl' : 'Choose a dressing'} <i className="fas fa-arrow-down"></i>
+                              </button>
                            )}
                         </div>
                       </div>
@@ -1523,7 +1682,7 @@ import { createRoot } from 'react-dom/client';
                         {dryComboSuggestionsVisible && (
                           <div className="mb-6 rounded-2xl border border-amber-400/40 bg-amber-500/10 p-4">
                             <p className="text-sm text-amber-100 leading-relaxed">
-                              Your bowl may feel dry. Consider adding a dip or dressing for better texture.
+                              Your bowl may feel dry. Add Avocado or Yogurt to improve texture and flavour.
                             </p>
                             <p className="mt-1 text-[11px] text-amber-200/90">Optional suggestion: tap any one to add, or dismiss.</p>
                             <div className="mt-3 space-y-2">
@@ -1554,19 +1713,19 @@ import { createRoot } from 'react-dom/client';
                           <div className="grid grid-cols-2 gap-3">
                             <div className="bg-gray-700/50 p-3 rounded-xl flex flex-col">
                               <span className="text-gray-400 text-xs mb-1">Calories</span>
-                              <span className="text-white font-bold">{formatMacroValue(totals.calories)} <span className="text-xs font-normal text-gray-400">kcal</span></span>
+                              <span className="text-white font-bold">~{formatMacroValue(totals.calories)} <span className="text-xs font-normal text-gray-400">kcal</span></span>
                             </div>
                             <div className="bg-gray-700/50 p-3 rounded-xl flex flex-col">
                               <span className="text-gray-400 text-xs mb-1">Protein</span>
-                              <span className="text-white font-bold">{formatMacroValue(totals.protein)} <span className="text-xs font-normal text-gray-400">g</span></span>
+                              <span className="text-white font-bold">~{formatMacroValue(totals.protein)} <span className="text-xs font-normal text-gray-400">g</span></span>
                             </div>
                             <div className="bg-gray-700/50 p-3 rounded-xl flex flex-col">
                               <span className="text-gray-400 text-xs mb-1">Carbs</span>
-                              <span className="text-white font-bold">{formatMacroValue(totals.carbs)} <span className="text-xs font-normal text-gray-400">g</span></span>
+                              <span className="text-white font-bold">~{formatMacroValue(totals.carbs)} <span className="text-xs font-normal text-gray-400">g</span></span>
                             </div>
                             <div className="bg-gray-700/50 p-3 rounded-xl flex flex-col">
                               <span className="text-gray-400 text-xs mb-1">Fats</span>
-                              <span className="text-white font-bold">{formatMacroValue(totals.fats)} <span className="text-xs font-normal text-gray-400">g</span></span>
+                              <span className="text-white font-bold">~{formatMacroValue(totals.fats)} <span className="text-xs font-normal text-gray-400">g</span></span>
                             </div>
                           </div>
                         </div>
@@ -1593,31 +1752,113 @@ import { createRoot } from 'react-dom/client';
                 </div>
               </section>
 
+              <section className="bg-white py-4">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <p className="text-center text-sm text-gray-600 font-semibold">Custom bowls may take longer to prepare & deliver.</p>
+                </div>
+              </section>
+
               {/* Subscriptions / Meal Plans Section */}
-              <section id="subscriptions" className="py-20 bg-white border-b border-gray-100 scroll-mt-24">
-                  <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+              <section id="subscriptions" className="py-20 bg-gradient-to-b from-white to-gray-50 border-b border-gray-100 scroll-mt-24">
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                       <div className="text-center mb-12">
                           <span className="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-600 text-xs font-bold uppercase tracking-wider mb-4"><i className="fas fa-fire mr-1"></i> Consistency is Key</span>
-                          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Subscribe & Save</h3>
-                          <p className="text-gray-500 max-w-2xl mx-auto">Skip the daily ordering. Get fresh, macro-calculated bowls delivered to your home or gym automatically.</p>
+                          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">🥗 Subscription Plans</h3>
+                          <p className="text-gray-500 max-w-2xl mx-auto">Skip the daily ordering. Get fresh, macro-calculated bowls delivered to your home or gym automatically with exclusive discounts.</p>
                       </div>
                       
-                      <div className="grid md:grid-cols-1 gap-8">
-                          {/* 30 Day Plan */}
-                          <div className="bg-gray-900 text-white rounded-3xl p-8 shadow-2xl shadow-gray-900/20 relative overflow-hidden transform md:-translate-y-2">
-                              <div className="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-4 py-1 rounded-bl-xl shadow-md"><i className="fas fa-star"></i> Best Value</div>
-                              <h4 className="text-2xl font-bold mb-2">30-Day Transformation</h4>
-                              <p className="text-gray-400 mb-6">For serious athletes committed to their macros.</p>
-                              <ul className="space-y-3 mb-8 text-gray-300">
-                                  <li className="flex items-center gap-2"><i className="fas fa-check text-green-400"></i> 1 Premium Bowl Per Day</li>
-                                  <li className="flex items-center gap-2"><i className="fas fa-check text-green-400"></i> Free Daily Delivery</li>
-                                  <li className="flex items-center gap-2"><i className="fas fa-check text-green-400"></i> Priority Menu Access</li>
-                                  <li className="flex items-center gap-2"><i className="fas fa-check text-green-400"></i> Save 10% Overall</li>
-                              </ul>
-                              <button onClick={() => openSubscription('30-Day Transformation Plan')} className="w-full py-4 rounded-xl bg-green-500 text-white font-bold hover:bg-green-600 transition-colors shadow-lg shadow-green-500/30">
+                      <div className="grid md:grid-cols-3 gap-8">
+                          {/* Starter Plan - 10 Bowls */}
+                          <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-xl hover:border-blue-200 transition-all relative overflow-hidden">
+                              <div className="absolute top-0 right-0 bg-blue-500 text-white text-xs font-bold px-4 py-1 rounded-bl-xl shadow-md"><i className="fas fa-rocket"></i> Getting Started</div>
+                              <h4 className="text-2xl font-bold text-gray-900 mb-2">Starter Plan</h4>
+                              <p className="text-gray-700 font-semibold mb-1">10 Bowls</p>
+                              <p className="text-blue-600 font-bold text-lg mb-4">Valid for 15 days</p>
+                              <p className="text-gray-600 mb-1 text-sm">Up to ₹199 per bowl</p>
+                              <p className="text-blue-500 font-bold mb-6">Save up to 5%</p>
+                              
+                              <div className="bg-blue-50 rounded-xl p-4 mb-6 border border-blue-200">
+                                  <p className="text-sm font-bold text-gray-900 mb-3">Includes:</p>
+                                  <ul className="space-y-2 text-sm text-gray-700">
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-blue-500"></i> Access to all bowls up to ₹199</li>
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-blue-500"></i> Freshly prepared meals</li>
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-blue-500"></i> Customizations available</li>
+                                  </ul>
+                              </div>
+                              
+                              <button onClick={() => openSubscription('Starter Plan – 10 Bowls (15 days, Save 5%)')} className="w-full py-4 rounded-xl bg-blue-500 text-white font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/30">
                                   Subscribe via WhatsApp
                               </button>
                           </div>
+
+                          {/* Fitness Plan - 20 Bowls (FEATURED) */}
+                          <div className="bg-gradient-to-b from-gray-900 to-gray-800 text-white rounded-3xl p-8 shadow-2xl shadow-gray-900/30 relative overflow-hidden transform md:-translate-y-4 border-2 border-green-500">
+                              <div className="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-4 py-2 rounded-bl-xl shadow-md"><i className="fas fa-star"></i> Most Popular</div>
+                              <h4 className="text-2xl font-bold mb-2">Fitness Plan</h4>
+                              <p className="text-gray-300 font-semibold mb-1">20 Bowls</p>
+                              <p className="text-green-400 font-bold text-lg mb-4">Valid for 30 days</p>
+                              <p className="text-gray-300 mb-1 text-sm">Up to ₹249 per bowl</p>
+                              <p className="text-green-400 font-bold mb-6">Save up to 10%</p>
+                              
+                              <div className="bg-green-900/30 rounded-xl p-4 mb-6 border border-green-500/30">
+                                  <p className="text-sm font-bold text-white mb-3">Includes:</p>
+                                  <ul className="space-y-2 text-sm text-gray-300">
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-green-400"></i> Covers most of the menu</li>
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-green-400"></i> High-protein & balanced meals</li>
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-green-400"></i> Priority preparation</li>
+                                  </ul>
+                              </div>
+                              
+                              <button onClick={() => openSubscription('Fitness Plan – 20 Bowls (30 days, Save 10%)')} className="w-full py-4 rounded-xl bg-green-500 text-white font-bold hover:bg-green-600 transition-colors shadow-lg shadow-green-500/30">
+                                  Subscribe via WhatsApp
+                              </button>
+                          </div>
+
+                          {/* Pro Plan - 30 Bowls */}
+                          <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-xl hover:border-purple-200 transition-all relative overflow-hidden">
+                              <div className="absolute top-0 right-0 bg-purple-600 text-white text-xs font-bold px-4 py-1 rounded-bl-xl shadow-md"><i className="fas fa-crown"></i> Maximum Savings</div>
+                              <h4 className="text-2xl font-bold text-gray-900 mb-2">🔥 Pro Plan</h4>
+                              <p className="text-gray-700 font-semibold mb-1">30 Bowls</p>
+                              <p className="text-purple-600 font-bold text-lg mb-4">Valid for 45 days</p>
+                              <p className="text-gray-600 mb-1 text-sm">Covers full menu (up to ₹329)</p>
+                              <p className="text-purple-600 font-bold mb-6">Save up to 15%</p>
+                              
+                              <div className="bg-purple-50 rounded-xl p-4 mb-6 border border-purple-200">
+                                  <p className="text-sm font-bold text-gray-900 mb-3">Includes:</p>
+                                  <ul className="space-y-2 text-sm text-gray-700">
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-purple-600"></i> Full menu access</li>
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-purple-600"></i> Custom bowl flexibility</li>
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-purple-600"></i> Maximum value & savings</li>
+                                  </ul>
+                              </div>
+                              
+                              <button onClick={() => openSubscription('Pro Plan – 30 Bowls (45 days, Save 15%)')} className="w-full py-4 rounded-xl bg-purple-600 text-white font-bold hover:bg-purple-700 transition-colors shadow-lg shadow-purple-600/30">
+                                  Subscribe via WhatsApp
+                              </button>
+                          </div>
+                      </div>
+
+                      {/* Important Notes */}
+                        <div className="mt-12 bg-amber-50 border border-amber-200 rounded-2xl p-8">
+                          <h5 className="text-lg font-bold text-gray-900 mb-4">ℹ️ Important Notes</h5>
+                          <div className="grid md:grid-cols-2 gap-4">
+                            <ul className="space-y-2 text-sm text-gray-700">
+                              <li className="flex items-start gap-2"><i className="fas fa-info-circle text-amber-600 mt-0.5"></i> <span>Validity starts from first order</span></li>
+                              <li className="flex items-start gap-2"><i className="fas fa-info-circle text-amber-600 mt-0.5"></i> <span>No delivery on Sundays</span></li>
+                              <li className="flex items-start gap-2"><i className="fas fa-info-circle text-amber-600 mt-0.5"></i> <span>Unused bowls expire after validity</span></li>
+                            </ul>
+                            <ul className="space-y-2 text-sm text-gray-700">
+                              <li className="flex items-start gap-2"><i className="fas fa-info-circle text-amber-600 mt-0.5"></i> <span>Extra charges apply if bowl exceeds plan value</span></li>
+                              <li className="flex items-start gap-2"><i className="fas fa-info-circle text-amber-600 mt-0.5"></i> <span>Plans are non-refundable & non-transferable</span></li>
+                              <li className="flex items-start gap-2"><i className="fas fa-info-circle text-amber-600 mt-0.5"></i> <span>Discounts are not cumulative across multiple plans</span></li>
+                            </ul>
+                          </div>
+                        </div>
+
+                      {/* Comparison Note */}
+                      <div className="mt-8 bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
+                          <p className="text-gray-700 font-medium mb-2">💡 <span className="font-bold">Pro Tip:</span> Subscribe today and enjoy exclusive discounts plus priority meal preparation!</p>
+                          <p className="text-sm text-gray-600">All plans come with fresh, macro-calculated meals prepared by our certified nutritionists. Cancel or modify anytime.</p>
                       </div>
                   </div>
               </section>
@@ -1668,32 +1909,6 @@ import { createRoot } from 'react-dom/client';
                           </button>
                       </div>
                   </div>
-              </section>
-
-              {/* Why TUB Fit Section */}
-              <section className="py-16 bg-white border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <div className="text-center mb-12">
-                    <h3 className="text-3xl font-bold text-gray-900 mb-4">Why Choose TUB Fit?</h3>
-                    <p className="text-gray-500 max-w-2xl mx-auto">Engineered to support your fitness journey with precision macros and amazing taste.</p>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {[
-                      { icon: "fas fa-dumbbell", title: "High Protein", desc: "Packed with premium protein sources for muscle recovery." },
-                      { icon: "fas fa-bowl-food", title: "Fresh Ingredients", desc: "Prepared fresh daily without preservatives." },
-                      { icon: "fas fa-bullseye", title: "Balanced Macros", desc: "Perfect ratio of carbs, healthy fats, and proteins." },
-                      { icon: "fas fa-sliders-h", title: "Customizable", desc: "You choose exactly what goes into your bowl." }
-                    ].map((feature, idx) => (
-                      <div key={idx} className="bg-green-50/50 border border-green-100 rounded-3xl p-6 text-center hover:-translate-y-1 transition-transform duration-300">
-                        <div className="mx-auto w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-green-600 shadow-sm mb-4">
-                          <i className={`${feature.icon} text-2xl`}></i>
-                        </div>
-                        <h4 className="text-lg font-bold text-gray-900 mb-2">{feature.title}</h4>
-                        <p className="text-sm text-gray-600 leading-relaxed">{feature.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </section>
 
               {/* Animated Stats Section */}
@@ -1835,7 +2050,6 @@ import { createRoot } from 'react-dom/client';
           const root = createRoot(document.getElementById('root'));
           root.render(<App />);
           window.__TUB_APP_MOUNTED__ = true;
-          console.log('✅ TUB Fit App rendered successfully!');
 
           // Generate QR Code after React renders
           setTimeout(() => {

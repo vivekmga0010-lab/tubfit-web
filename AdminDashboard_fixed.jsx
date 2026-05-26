@@ -109,7 +109,8 @@ const AdminDashboard = () => {
         </div>
 
         <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
@@ -141,27 +142,93 @@ const AdminDashboard = () => {
                       </div>
                     </td>
                     <td className="p-4 text-right">
-                      <div className="flex flex-col items-end gap-2">
-                        <div className="text-sm font-black text-green-700">₹{order.totalPrice}</div>
-                        {order.gymPromoCode && (
-                          <div className="text-[10px] text-orange-500 font-bold">Code: {order.gymPromoCode}</div>
-                        )}
-                        {order.status === 'completed' ? (
-                          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase">Completed</span>
-                        ) : (
-                          <button 
-                            onClick={() => handleComplete(order.orderId)}
-                            className="bg-gray-900 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase hover:bg-black transition-colors"
-                          >
-                            Mark Complete
-                          </button>
-                        )}
+                      <div className="flex flex-col h-full justify-between">
+                        <div>
+                          {order.gymPromoCode && (
+                            <div className="text-[10px] text-orange-500 font-bold">Code: {order.gymPromoCode}</div>
+                          )}
+                        </div>
+                        <div className="flex flex-col items-end gap-2 mt-4">
+                          <div className="text-sm font-black text-green-700">₹{order.totalPrice}</div>
+                          {order.status === 'completed' ? (
+                            <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase">Completed</span>
+                          ) : (
+                            <button 
+                              onClick={() => handleComplete(order.orderId)}
+                              className="bg-gray-900 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase hover:bg-black transition-colors"
+                            >
+                              Mark Complete
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden divide-y divide-gray-200">
+            {filteredOrders.map((order, idx) => (
+              <div key={idx} className={`p-4 border-b border-gray-200 ${order.status === 'completed' ? 'bg-gray-50/50 opacity-75' : 'hover:bg-gray-50'} transition-colors flex flex-col min-h-[200px]`}>
+                {/* Top Section - All Content */}
+                <div className="flex-1">
+                  {/* Order ID & Date */}
+                  <div className="mb-3">
+                    <div className="text-sm font-bold text-gray-900">{order.orderId}</div>
+                    <div className="text-[10px] text-gray-400">{new Date(order.serverTimestamp).toLocaleString()}</div>
+                  </div>
+
+                  {/* Customer Info */}
+                  <div className="mb-3">
+                    <div className="text-xs font-bold text-gray-600 uppercase mb-1">Customer</div>
+                    <div className="text-sm font-semibold text-gray-800">{order.name}</div>
+                    <div className="text-xs text-gray-500">{order.phone}</div>
+                  </div>
+
+                  {/* Delivery Info */}
+                  <div className="mb-3">
+                    <div className="text-xs font-bold text-gray-600 uppercase mb-1">Delivery</div>
+                    <div className="text-xs font-bold text-gray-700">{order.deliveryDate || 'N/A'}</div>
+                    <div className="text-[10px] text-gray-500">{order.timeSlot || 'N/A'}</div>
+                  </div>
+
+                  {/* Items */}
+                  <div>
+                    <div className="text-xs font-bold text-gray-600 uppercase mb-1">Items</div>
+                    <div className="text-xs text-gray-600 whitespace-pre-wrap">
+                      {order.items}
+                    </div>
+                  </div>
+
+                  {/* Promo Code */}
+                  {order.gymPromoCode && (
+                    <div className="mt-3">
+                      <div className="text-[10px] text-orange-500 font-bold">PROMO: {order.gymPromoCode}</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Bottom-Right Section - Price & Status */}
+                <div className="flex justify-end items-end gap-3 mt-4 pt-4 border-t border-gray-100">
+                  <div className="text-right">
+                    <div className="text-lg font-black text-green-700">₹{order.totalPrice}</div>
+                    {order.status === 'completed' ? (
+                      <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase mt-2">Completed</span>
+                    ) : (
+                      <button 
+                        onClick={() => handleComplete(order.orderId)}
+                        className="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-[10px] font-bold uppercase mt-2 hover:bg-yellow-200 transition-colors"
+                      >
+                        Pending
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
