@@ -25,62 +25,101 @@
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #f9fafb; }
 
+        .desktop-only {
+            display: block;
+        }
+        .mobile-order-list {
+            display: none;
+        }
+
         @media (max-width: 768px) {
-            .admin-table {
-                border-collapse: collapse;
-            }
-            .admin-table thead {
+            .desktop-only {
                 display: none;
             }
-            .admin-table tbody {
+            .admin-table {
+                display: none;
+            }
+            .mobile-order-list {
                 display: block;
             }
-            .admin-table tr {
-                display: block;
+            .mobile-order-card {
                 margin-bottom: 1rem;
                 border-radius: 1.5rem;
                 background: #ffffff;
-                box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+                box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
                 border: 1px solid rgba(229, 231, 235, 1);
                 overflow: hidden;
             }
-            .admin-table td {
-                display: block;
-                width: 100%;
-                padding: 2.4rem 1.25rem 1rem;
-                position: relative;
-                text-align: left;
-                border-bottom: 1px solid rgba(229, 231, 235, 1);
+            .mobile-order-card-header {
+                display: flex;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: 1.25rem 1.5rem;
             }
-            .admin-table td:not(:first-child) {
-                border-top: 1px solid rgba(229, 231, 235, 1);
+            .mobile-order-card-summary {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin-top: 0.75rem;
             }
-            .admin-table td:last-child {
-                border-bottom: none;
-            }
-            .admin-table td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 1.25rem;
-                top: 1rem;
+            .mobile-order-card-status {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.5rem 0.85rem;
+                border-radius: 9999px;
                 font-size: 0.75rem;
                 font-weight: 800;
-                color: rgba(55, 65, 81, 1);
+                line-height: 1;
+                white-space: nowrap;
+            }
+            .mobile-order-card-details {
+                padding: 0 1.5rem 1.5rem;
+                border-top: 1px solid rgba(229, 231, 235, 1);
+            }
+            .mobile-order-card-row {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(229, 231, 235, 1);
+            }
+            .mobile-order-card-row:last-child {
+                border-bottom: none;
+            }
+            .mobile-order-card-row-label {
+                display: block;
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: rgba(107, 114, 128, 1);
                 text-transform: uppercase;
                 letter-spacing: 0.04em;
+                margin-bottom: 0.45rem;
             }
-            .admin-table td > * {
-                margin-top: 1.25rem;
+            .mobile-order-card-row-content {
+                font-size: 0.95rem;
+                color: rgba(31, 41, 55, 1);
+                line-height: 1.6;
+                white-space: pre-wrap;
             }
-            .admin-table td > *:first-child {
-                margin-top: 0;
+            .mobile-order-card-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin-top: 1rem;
+                justify-content: space-between;
             }
-            .admin-table td[data-label="Items"] {
-                padding-bottom: 1rem;
+            .mobile-order-card-toggle {
+                border: none;
+                background: transparent;
+                color: rgba(55, 65, 81, 1);
+                font-weight: 700;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
             }
-            .admin-table td[data-label="Total"],
-            .admin-table td[data-label="Action"] {
-                text-align: left;
+        }
+        @media (min-width: 769px) {
+            .mobile-order-list {
+                display: none;
             }
         }
     </style>
@@ -112,10 +151,12 @@
             const [statusFilter, setStatusFilter] = useState('all');
             const [orderStatuses, setOrderStatuses] = useState({});
             const [deletedOrders, setDeletedOrders] = useState([]);
+            const [expandedOrderKeys, setExpandedOrderKeys] = useState([]);
             const [exportStartDate, setExportStartDate] = useState(getTodayKey());
             const [exportEndDate, setExportEndDate] = useState(getTodayKey());
             const [exporting, setExporting] = useState(false);
             const [error, setError] = useState(null);
+            const [showSales, setShowSales] = useState(false);
             
             // Manual Order State
             const [isManualModalOpen, setIsManualModalOpen] = useState(false);
@@ -327,6 +368,16 @@
                 if (!confirm('Show all deleted orders again?')) return;
                 setDeletedOrders([]);
                 localStorage.removeItem('tubAdminDeletedOrders');
+            };
+
+            const toggleOrderDetails = (order, idx) => {
+                const key = getOrderKey(order, idx);
+                setExpandedOrderKeys((prev) => prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]);
+            };
+
+            const isOrderExpanded = (order, idx) => {
+                const key = getOrderKey(order, idx);
+                return expandedOrderKeys.includes(key);
             };
 
             const formatOrderDatePart = () => {
@@ -638,56 +689,64 @@
                         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                             <h1 className="text-2xl font-bold text-gray-900">Orders Dashboard</h1>
                             
-                            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap items-start">
-                                <button onClick={() => setIsManualModalOpen(true)} className="bg-[#25D366] hover:bg-[#1ebd5a] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-colors">
-                                    <i className="fas fa-plus"></i> WhatsApp Order
-                                </button>
-                                <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
-                                    <span className="text-sm text-gray-500 font-medium ml-2">Date:</span>
-                                    <select className="border-none text-sm py-1.5 px-2 focus:ring-0 focus:outline-none bg-white font-bold cursor-pointer" value={filterMode} onChange={(e) => setFilterMode(e.target.value)}>
-                                        <option value="today">Today</option>
-                                        <option value="upcoming">Upcoming</option>
-                                        <option value="custom">Custom</option>
-                                    </select>
-                                    {filterMode === 'custom' && (
+                            <div className="flex flex-col gap-3 w-full">
+                                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between w-full">
+                                    <div className="flex items-center gap-3 flex-wrap">
+                                        <button onClick={() => setIsManualModalOpen(true)} className="bg-[#25D366] hover:bg-[#1ebd5a] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-colors">
+                                            <i className="fas fa-plus"></i> WhatsApp Order
+                                        </button>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-3 flex-wrap w-full md:w-auto">
+                                        <div className="flex flex-wrap items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
+                                            <span className="text-sm text-gray-500 font-medium ml-2">Date:</span>
+                                            <select className="border-none text-sm py-1.5 px-2 focus:ring-0 focus:outline-none bg-white font-bold cursor-pointer" value={filterMode} onChange={(e) => setFilterMode(e.target.value)}>
+                                                <option value="today">Today</option>
+                                                <option value="upcoming">Upcoming</option>
+                                                <option value="custom">Custom</option>
+                                            </select>
+                                            {filterMode === 'custom' && (
+                                                <input
+                                                    type="date"
+                                                    value={filterCustomDate}
+                                                    onChange={(e) => setFilterCustomDate(e.target.value)}
+                                                    className="border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                                />
+                                            )}
+                                            <button onClick={fetchOrders} disabled={loading} className="bg-gray-100 hover:bg-gray-200 text-gray-700 w-9 h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-colors">
+                                                <i className={`fas fa-sync-alt ${loading ? 'animate-spin' : ''}`}></i>
+                                            </button>
+                                        </div>
+                                        <div className="flex flex-wrap items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
+                                            <span className="text-sm text-gray-500 font-medium ml-2">Status:</span>
+                                            <select className="border-none text-sm py-1.5 px-2 focus:ring-0 focus:outline-none bg-white font-bold cursor-pointer" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                                                <option value="all">All</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="completed">Completed</option>
+                                                <option value="delivered">Delivered</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-3 bg-white p-3 rounded-xl shadow-sm border border-gray-200">
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 flex-1 min-w-0">
+                                        <span className="text-sm text-gray-500 font-medium ml-2">Export:</span>
                                         <input
                                             type="date"
-                                            value={filterCustomDate}
-                                            onChange={(e) => setFilterCustomDate(e.target.value)}
-                                            className="border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            value={exportStartDate}
+                                            onChange={(e) => setExportStartDate(e.target.value)}
+                                            className="w-full sm:w-auto min-w-0 border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
                                         />
-                                    )}
-                                    <button onClick={fetchOrders} disabled={loading} className="bg-gray-100 hover:bg-gray-200 text-gray-700 w-9 h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-colors">
-                                        <i className={`fas fa-sync-alt ${loading ? 'animate-spin' : ''}`}></i>
-                                    </button>
-                                </div>
-                                <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
-                                    <span className="text-sm text-gray-500 font-medium ml-2">Export:</span>
-                                    <input
-                                        type="date"
-                                        value={exportStartDate}
-                                        onChange={(e) => setExportStartDate(e.target.value)}
-                                        className="border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    />
-                                    <span className="text-sm font-bold">to</span>
-                                    <input
-                                        type="date"
-                                        value={exportEndDate}
-                                        onChange={(e) => setExportEndDate(e.target.value)}
-                                        className="border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    />
-                                    <button onClick={exportOrders} disabled={exporting} className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors">
+                                        <span className="text-sm font-bold">to</span>
+                                        <input
+                                            type="date"
+                                            value={exportEndDate}
+                                            onChange={(e) => setExportEndDate(e.target.value)}
+                                            className="w-full sm:w-auto min-w-0 border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        />
+                                    </div>
+                                    <button onClick={exportOrders} disabled={exporting} className="w-full sm:w-auto bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors">
                                         {exporting ? 'Exporting...' : 'Download CSV'}
                                     </button>
-                                </div>
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
-                                    <span className="text-sm text-gray-500 font-medium ml-2">Status:</span>
-                                    <select className="border-none text-sm py-1.5 px-2 focus:ring-0 focus:outline-none bg-white font-bold cursor-pointer" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                                        <option value="all">All</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="completed">Completed</option>
-                                        <option value="delivered">Delivered</option>
-                                    </select>
                                 </div>
                                 {deletedOrders.length > 0 && (
                                     <button onClick={restoreDeletedOrders} className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-colors">
@@ -700,27 +759,27 @@
                         {/* Stats Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                             <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
-                                <div className="bg-green-100 w-14 h-14 flex items-center justify-center rounded-2xl text-green-600 text-xl border border-green-200"><i className="fas fa-rupee-sign"></i></div>
-                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Filtered Sales</p><p className="text-3xl font-black text-gray-900">₹{filteredSales}</p></div>
+                                <div className="bg-green-100 w-14 h-14 flex items-center justify-center rounded-2xl text-green-600 text-xl border border-green-200 cursor-pointer hover:bg-green-200 transition-colors" onDoubleClick={() => setShowSales(!showSales)} title="Double-tap to toggle sales"><i className="fas fa-rupee-sign"></i></div>
+                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Filtered Sales</p><p className="text-3xl font-black text-green-600">{showSales ? `₹${filteredSales}` : '••••'}</p></div>
                             </div>
                             <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
                                 <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-2xl text-blue-600 text-xl border border-blue-200"><i className="fas fa-shopping-bag"></i></div>
-                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Showing Orders</p><p className="text-3xl font-black text-gray-900">{filteredOrders.length}</p></div>
+                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Showing Orders</p><p className="text-3xl font-black text-blue-600">{filteredOrders.length}</p></div>
                             </div>
                             <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
                                 <div className="bg-yellow-100 w-14 h-14 flex items-center justify-center rounded-2xl text-yellow-700 text-xl border border-yellow-200"><i className="fas fa-hourglass-half"></i></div>
-                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Pending</p><p className="text-3xl font-black text-gray-900">{pendingCount}</p></div>
+                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Pending</p><p className="text-3xl font-black text-yellow-700">{pendingCount}</p></div>
                             </div>
                             <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
                                 <div className="bg-emerald-100 w-14 h-14 flex items-center justify-center rounded-2xl text-emerald-600 text-xl border border-emerald-200"><i className="fas fa-check-circle"></i></div>
-                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Delivered</p><p className="text-3xl font-black text-gray-900">{deliveredCount}</p></div>
+                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Delivered</p><p className="text-3xl font-black text-emerald-600">{deliveredCount}</p></div>
                             </div>
                         </div>
 
                         {error && <div className="bg-red-50 text-red-600 p-4 rounded-xl mb-6 text-sm font-medium"><i className="fas fa-exclamation-circle mr-2"></i> {error}</div>}
 
                         {/* Orders Table */}
-                        <div className="bg-white shadow-sm rounded-3xl border border-gray-100 overflow-hidden">
+                        <div className="bg-white shadow-sm rounded-3xl border border-gray-100 overflow-hidden desktop-only">
                             <div className="overflow-x-auto">
                                 <table className="admin-table min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
@@ -742,7 +801,7 @@
                                                 <td data-label="Items" className="px-6 py-5"><div className="text-sm text-gray-700 whitespace-pre-wrap max-w-sm leading-relaxed">{formatOrderItems(order.items)}</div>{order.gymPromoCode && <div className="mt-2 inline-flex items-center px-2 py-1 rounded-md text-[11px] font-bold bg-orange-100 text-orange-800 uppercase tracking-wider border border-orange-200"><i className="fas fa-tag mr-1.5"></i> {order.gymPromoCode}</div>}</td>
                                                 <td data-label="Delivery Details" className="px-6 py-5"><div className="text-sm text-gray-900 capitalize font-bold mb-1.5 inline-flex items-center gap-1.5"><i className={`fas ${order.deliveryType === 'gym' ? 'fa-dumbbell text-blue-500' : 'fa-home text-orange-500'}`}></i> {order.deliveryType}</div><div className="text-xs text-gray-500 max-w-[200px] truncate leading-relaxed" title={order.address}>{order.address}</div></td>
                                                 <td data-label="Status" className="px-6 py-5">
-                                                    <select value={getOrderStatus(order, idx)} onChange={(e) => saveOrderStatus(order, idx, e.target.value)} className={`text-xs font-bold rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 ${getOrderStatus(order, idx) === 'pending' ? 'bg-yellow-50 text-yellow-800 border-yellow-200' : getOrderStatus(order, idx) === 'completed' ? 'bg-blue-50 text-blue-800 border-blue-200' : 'bg-emerald-50 text-emerald-800 border-emerald-200'}`}>
+                                                    <select value={getOrderStatus(order, idx)} onChange={(e) => saveOrderStatus(order, idx, e.target.value)} className={`text-xs font-bold rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 ${getOrderStatus(order, idx) === 'pending' ? 'bg-orange-100 text-orange-800 border-orange-200' : getOrderStatus(order, idx) === 'completed' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-sky-100 text-sky-800 border-sky-200'}`}>
                                                         <option value="pending">Pending</option>
                                                         <option value="completed">Completed</option>
                                                         <option value="delivered">Delivered</option>
@@ -759,6 +818,82 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        <div className="mobile-order-list">
+                            {loading && orders.length === 0 ? (
+                                <div className="p-8 text-center text-gray-500">
+                                    <i className="fas fa-circle-notch fa-spin text-3xl mb-3 text-green-500"></i>
+                                    <p className="font-medium">Loading your orders...</p>
+                                </div>
+                            ) : filteredOrders.length === 0 ? (
+                                <div className="p-8 text-center text-gray-400">
+                                    <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3"><i className="fas fa-inbox text-2xl"></i></div>
+                                    <p className="font-medium">No orders found for this filter.</p>
+                                </div>
+                            ) : filteredOrders.map((order, idx) => {
+                                const expanded = isOrderExpanded(order, idx);
+                                const status = getOrderStatus(order, idx);
+                                const statusClass = status === 'pending' ? 'bg-orange-100 text-orange-800 border-orange-200' : status === 'completed' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-sky-100 text-sky-800 border-sky-200';
+                                const cardBgClass = status === 'pending' ? 'bg-orange-50 border-orange-200' : status === 'completed' ? 'bg-emerald-50 border-emerald-200' : 'bg-sky-50 border-sky-200';
+                                const promoHighlight = order.gymPromoCode ? 'ring-2 ring-orange-100' : '';
+
+                                return (
+                                    <div key={idx} className={`mobile-order-card border border-t-4 ${cardBgClass} ${promoHighlight}`}>
+                                        <div className="mobile-order-card-header">
+                                            <div>
+                                                {order.orderId && <div className="text-[11px] font-mono font-bold text-indigo-600 mb-1.5">{order.orderId}</div>}
+                                                <div className="text-base font-bold text-gray-900">{order.deliveryDate}</div>
+                                                <div className="text-sm text-gray-500 mt-1">{order.timeSlot}</div>
+                                                <div className="text-xs text-gray-400 mt-2">Placed: {formatPlacedTime(order)}</div>
+                                            </div>
+                                            <div className="flex flex-col items-end gap-2">
+                                                <span className={`mobile-order-card-status border ${statusClass}`}>{status}</span>
+                                                <button type="button" className="mobile-order-card-toggle" onClick={() => toggleOrderDetails(order, idx)}>
+                                                    {expanded ? 'Hide details' : 'Show details'} <i className={`fas fa-chevron-${expanded ? 'up' : 'down'}`}></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="px-4 pb-4">
+                                            <div className="mobile-order-card-summary">
+                                                <div className="text-sm font-bold text-gray-900">{order.customerName}</div>
+                                                <div className="text-sm text-gray-500">{order.phone}</div>
+                                                {order.gymPromoCode && <div className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold bg-orange-100 text-orange-800 border border-orange-200 uppercase tracking-wider">Promo: {order.gymPromoCode}</div>}
+                                                <div className="text-sm font-bold text-gray-900">₹{order.totalPrice}</div>
+                                            </div>
+                                        </div>
+                                        {expanded && (
+                                            <div className="mobile-order-card-details">
+                                                <div className="mobile-order-card-row">
+                                                    <div className="mobile-order-card-row-label">Items</div>
+                                                    <div className="mobile-order-card-row-content">{formatOrderItems(order.items)}</div>
+                                                </div>
+                                                <div className="mobile-order-card-row">
+                                                    <div className="mobile-order-card-row-label">Delivery</div>
+                                                    <div className="mobile-order-card-row-content font-semibold capitalize">{order.deliveryType}</div>
+                                                    <div className="mobile-order-card-row-content text-gray-500 mt-2">{order.address}</div>
+                                                </div>
+                                                {order.gymPromoCode && (
+                                                    <div className="mobile-order-card-row">
+                                                        <div className="mobile-order-card-row-label">Promo Code</div>
+                                                        <div className="mobile-order-card-row-content">{order.gymPromoCode}</div>
+                                                    </div>
+                                                )}
+                                                <div className="mobile-order-card-actions">
+                                                    <select value={status} onChange={(e) => saveOrderStatus(order, idx, e.target.value)} className="text-sm font-bold rounded-xl border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
+                                                        <option value="pending">Pending</option>
+                                                        <option value="completed">Completed</option>
+                                                        <option value="delivered">Delivered</option>
+                                                    </select>
+                                                    <button onClick={() => deleteOrder(order, idx)} className="w-full sm:w-auto bg-red-50 text-red-600 px-4 py-2 rounded-xl font-bold hover:bg-red-100 transition-colors flex items-center justify-center gap-2">
+                                                        <i className="fas fa-trash"></i>
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </main>
                 </div>
