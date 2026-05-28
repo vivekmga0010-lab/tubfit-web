@@ -1,25 +1,17 @@
 {
-  "name": "tubdelhi210426",
-  "version": "1.0.0",
-  "description": "TUB Delhi Web Application",
-  "main": "server.js",
+  "name": "frontend",
+  "private": true,
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 5173",
+    "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "server": "node server.js",
-    "start": "npm run build && node server.js",
-    "dev:all": "node scripts/dev-all.js"
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "@vitejs/plugin-react": "^4.2.1",
-    "express": "^4.18.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "vite": "^6.0.0"
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0",
+    "@vitejs/plugin-react": "^4.2.1"
   }
 }
