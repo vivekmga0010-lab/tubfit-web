@@ -99,9 +99,9 @@ import { createRoot } from 'react-dom/client';
             { id: "bf6", name: "Fruit n Nuts Bowl", ingredients: "Oats + Fruits + Nuts + Seeds Mix", calories: 500, protein: 11, carbs: 60, fats: 22, price: 249, image: "/uploads/fruit_n_nuts_oat_bowl.webp", badges: ["Energy Boost", "Clean Eating"] }
           ],
           "Guilt-Free Add-ons": [
-            { id: "gf1", name: "Whey Protein Berry Smoothie", ingredients: "Isolate Whey + Mixed Berries + Almond Milk (No Sugar)", calories: 180, protein: 25, carbs: 10, fats: 3, price: 149, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
-            { id: "gf2", name: "Citrus Detox Water", ingredients: "Lemon + Mint + Cucumber + Chia Seeds", calories: 15, protein: 0, carbs: 3, fats: 0, price: 69, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
-            { id: "gf3", name: "Keto Almond Brownie", ingredients: "Almond Flour + Dark Chocolate + Stevia + Whey Protein", calories: 210, protein: 12, carbs: 8, fats: 14, price: 129, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true }
+            { id: "gf1", name: "Whey Protein Berry Smoothie", ingredients: "Isolate Whey + Mixed Berries + Almond Milk (No Sugar)", description: "A thick, creamy post-workout blend packed with premium isolate and antioxidant-rich berries.", calories: 180, protein: 25, carbs: 10, fats: 3, price: 149, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
+            { id: "gf2", name: "Citrus Detox Water", ingredients: "Lemon + Mint + Cucumber + Chia Seeds", description: "Infused with crisp citrus and essential electrolytes to crush bloating and keep you hydrated.", calories: 15, protein: 0, carbs: 3, fats: 0, price: 69, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
+            { id: "gf3", name: "Keto Almond Brownie", ingredients: "Almond Flour + Dark Chocolate + Stevia + Whey Protein", description: "Decadent keto-friendly brownie made with almond flour, dark chocolate and protein for guilt-free recovery.", calories: 210, protein: 12, carbs: 8, fats: 14, price: 129, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true }
           ]
         };
 
@@ -1425,7 +1425,7 @@ import { createRoot } from 'react-dom/client';
                                     {item.upcoming ? (
                                       <p className="text-sm text-gray-500 mb-6 flex-1 line-clamp-3">
                                         <span className="font-semibold text-gray-700">Ingredients:</span>{' '}
-                                        <span className="blur-[4px] select-none text-gray-400 font-medium">Classified chef secret blend...</span>
+                                        <span className="text-gray-400 font-medium">{item.description || 'Classified chef secret blend...'}</span>
                                       </p>
                                     ) : (
                                       <p className="text-sm text-gray-500 mb-6 flex-1 line-clamp-3">
@@ -1781,7 +1781,7 @@ import { createRoot } from 'react-dom/client';
                               </div>
                               
                               <button onClick={() => openSubscription('Starter Plan – 10 Bowls (15 days, Save 5%)')} className="w-full py-4 rounded-xl bg-blue-500 text-white font-bold hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/30">
-                                  Subscribe via WhatsApp
+                                  Get Started via WhatsApp
                               </button>
                           </div>
 
@@ -1804,7 +1804,7 @@ import { createRoot } from 'react-dom/client';
                               </div>
                               
                               <button onClick={() => openSubscription('Fitness Plan – 20 Bowls (30 days, Save 10%)')} className="w-full py-4 rounded-xl bg-green-500 text-white font-bold hover:bg-green-600 transition-colors shadow-lg shadow-green-500/30">
-                                  Subscribe via WhatsApp
+                                  Get Started via WhatsApp
                               </button>
                           </div>
 
@@ -1827,7 +1827,7 @@ import { createRoot } from 'react-dom/client';
                               </div>
                               
                               <button onClick={() => openSubscription('Pro Plan – 30 Bowls (45 days, Save 15%)')} className="w-full py-4 rounded-xl bg-purple-600 text-white font-bold hover:bg-purple-700 transition-colors shadow-lg shadow-purple-600/30">
-                                  Subscribe via WhatsApp
+                                  Get Started via WhatsApp
                               </button>
                           </div>
                       </div>
