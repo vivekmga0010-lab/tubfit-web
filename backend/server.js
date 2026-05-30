@@ -196,9 +196,15 @@ app.use((req, res, next) => {
   next();
 });
 
-const distPath = path.join(__dirname, 'dist');
+let distPath = path.join(__dirname, 'dist');
+const frontendDistFallback = path.join(__dirname, '..', 'frontend', 'dist');
 if (!fs.existsSync(distPath)) {
-  console.warn('⚠️ Warning: "dist" directory not found. Please run "npm run build" to generate frontend assets.');
+  if (fs.existsSync(frontendDistFallback)) {
+    distPath = frontendDistFallback;
+    console.warn('⚠️ Warning: backend dist not found — using frontend/dist as fallback.');
+  } else {
+    console.warn('⚠️ Warning: "dist" directory not found. Run "npm run build" to generate frontend assets.');
+  }
 }
 
 app.use(express.static(distPath));
@@ -387,7 +393,12 @@ app.patch('/api/admin/orders/:orderId/complete', (req, res) => {
 
 // Admin dashboard is the restored standalone admin page.
 app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+  const adminPath = path.join(distPath, 'admin.html');
+  if (fs.existsSync(adminPath)) {
+    return res.sendFile(adminPath);
+  } else {
+    res.status(404).send('Admin dashboard not found. Run "npm run build" first.');
+  }
 });
 
 // Catch-all to serve index.html for SPA routing

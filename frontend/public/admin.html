@@ -6,7 +6,7 @@
     <title>TUB Fit - Admin Dashboard</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/favicon.png?v=3">
+    <link rel="icon" type="image/png" href="/Favicon.png?v=3">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -174,15 +174,28 @@
                 timeSlot: 'ASAP'
             });
 
-            // Simple client-side protection
-            const handleLogin = (e) => {
+            // Server-side authentication
+            const handleLogin = async (e) => {
                 e.preventDefault();
-                // You can change this password to anything you like
-                if (password === 'tubadmin123') {
-                    localStorage.setItem(AUTH_STORAGE_KEY, 'true');
-                    setIsAuthenticated(true);
-                } else {
-                    alert('Incorrect Password');
+                setLoading(true);
+                try {
+                    const res = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data && data.success) {
+                        localStorage.setItem(AUTH_STORAGE_KEY, 'true');
+                        setIsAuthenticated(true);
+                    } else {
+                        alert(data && data.message ? data.message : 'Incorrect Password');
+                    }
+                } catch (err) {
+                    console.error('Login error:', err);
+                    alert('Login failed. Check console.');
+                } finally {
+                    setLoading(false);
                 }
             };
 

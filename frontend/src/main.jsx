@@ -978,12 +978,6 @@ import { createRoot } from 'react-dom/client';
           return (
             <div className="bg-white text-gray-800 selection:bg-green-200 pb-20 md:pb-0 relative">
               
-              {/* FOMO Countdown Banner */}
-              <div className="bg-orange-500 text-white text-center py-2 px-4 text-xs sm:text-sm font-bold tracking-wide flex items-center justify-center gap-2">
-                  <i className="fas fa-clock"></i>
-                  <span>Order within {timeLeft} for guaranteed next-day morning delivery!</span>
-              </div>
-
               {/* Toast Notification */}
               {toast.visible && (
                   <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-bounce whitespace-nowrap">
