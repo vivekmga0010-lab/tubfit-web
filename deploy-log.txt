@@ -4,3 +4,6 @@
 [2026-05-30T12:20:07.067Z] === prestart run ===
 [2026-05-30T12:20:07.069Z] ✓ Frontend assets already present at backend/dist
 [2026-05-30T12:20:07.070Z] === prestart finished ===
+[2026-06-01T09:17:08.720Z] === prestart run ===
+[2026-06-01T09:17:08.721Z] ✓ Frontend assets already present at backend/dist
+[2026-06-01T09:17:08.722Z] === prestart finished ===

@@ -1,6 +1,7 @@
 {
   "name": "tubfit-web",
   "private": true,
+  "main": "server.js",
   "scripts": {
     "install": "npm --prefix frontend install && npm --prefix backend install",
     "build": "npm --prefix frontend run build && node scripts/build.js",
