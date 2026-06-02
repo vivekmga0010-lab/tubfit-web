@@ -224,6 +224,16 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date() });
 });
 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'gymdiet2026';
+
+app.post('/api/admin/login', (req, res) => {
+  const password = String(req.body && req.body.password || '').trim();
+  if (password === ADMIN_PASSWORD) {
+    return res.json({ success: true, message: 'Authenticated' });
+  }
+  res.status(401).json({ success: false, message: 'Incorrect password' });
+});
+
 app.post('/api/orders', async (req, res) => {
   try {
     // Save order locally to orders.json
