@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import express from 'express';
 import fs from 'fs';
 import path from 'path';
 
@@ -10,13 +9,15 @@ export default defineConfig({
     {
       name: 'serve-public-assets',
       configureServer(server) {
-        server.middlewares.use('/admin', (req, res) => {
+        server.middlewares.use('/admin', (req, res, next) => {
           const adminPath = path.resolve('public/admin.html');
-          res.setHeader('Content-Type', 'text/html; charset=utf-8');
-          res.end(fs.readFileSync(adminPath, 'utf8'));
+          if (fs.existsSync(adminPath)) {
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            res.end(fs.readFileSync(adminPath, 'utf8'));
+          } else {
+            next();
+          }
         });
-        server.middlewares.use('/uploads', express.static(path.resolve('public/uploads')));
-        server.middlewares.use('/Favicon.png', express.static(path.resolve('public/Favicon.png')));
       },
     },
   ],
