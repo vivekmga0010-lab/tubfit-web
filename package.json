@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "install": "npm --prefix frontend install && npm --prefix backend install",
-    "build": "npm --prefix frontend run build && node scripts/build.js",
+    "build": "npm --prefix frontend run build && node scripts/build.js && node scripts/normalize-uploads.js",
     "start": "node scripts/prestart.js && npm --prefix backend run start",
     "deploy": "npm run build && pm2 restart tubfit || pm2 start backend/server.js --name tubfit"
   }
