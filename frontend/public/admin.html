@@ -1042,18 +1042,18 @@
                                                     <div className="text-center text-sm text-gray-500">No deleted orders available.</div>
                                                 ) : filteredDeletedOrderList.map(({ order, key, index }) => (
                                                     <div key={key} className="rounded-3xl border border-gray-200 p-4 bg-gray-50 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                                                        <div className="flex items-start gap-3">
+                                                        <div className="flex items-start gap-3 min-w-0">
                                                             <input
                                                                 type="checkbox"
                                                                 checked={isDeletedOrderSelected(key)}
                                                                 onChange={() => toggleDeletedOrderSelection(key)}
                                                                 className="mt-1 h-4 w-4 text-green-600 border-gray-300 rounded-sm focus:ring-green-500"
                                                             />
-                                                            <div>
-                                                                <div className="text-sm font-bold text-gray-900">{order.orderId || `Order ${index + 1}`}</div>
-                                                                <div className="text-sm text-gray-600">{order.customerName || order.name || 'Unknown customer'}</div>
-                                                                <div className="text-xs text-gray-500">{order.deliveryDate || 'No date'} · {order.timeSlot || 'No slot'}</div>
-                                                                <div className="text-xs text-gray-500 mt-2">{String(order.items || '').slice(0, 120)}{String(order.items || '').length > 120 ? '…' : ''}</div>
+                                                            <div className="min-w-0">
+                                                                <div className="text-sm font-bold text-gray-900 truncate">{order.orderId || `Order ${index + 1}`}</div>
+                                                                <div className="text-sm text-gray-600 truncate">{order.customerName || order.name || 'Unknown customer'}</div>
+                                                                <div className="text-xs text-gray-500 truncate">{order.deliveryDate || 'No date'} · {order.timeSlot || 'No slot'}</div>
+                                                                <div className="text-xs text-gray-500 mt-2 break-words">{String(order.items || '').slice(0, 120)}{String(order.items || '').length > 120 ? '…' : ''}</div>
                                                             </div>
                                                         </div>
                                                         <div className="flex flex-col gap-2 md:items-end">
