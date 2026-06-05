@@ -721,13 +721,8 @@
             const filteredOrders = orders.filter((order, idx) => {
                 const key = getOrderKey(order, idx);
                 if (deletedOrders.includes(key) || permanentlyDeletedOrders.includes(key)) return false;
-                if (statusFilter !== 'all') {
-                    if (statusFilter === 'pending') {
-                        const orderStatus = getOrderStatus(order, idx);
-                        if (orderStatus === 'delivered' || orderStatus === 'cancelled') return false;
-                    } else if (getOrderStatus(order, idx) !== statusFilter) {
-                        return false;
-                    }
+                if (statusFilter !== 'all' && getOrderStatus(order, idx) !== statusFilter) {
+                    return false;
                 }
                 const orderDate = parseOrderDate(order);
                 const today = todayStart();
@@ -745,11 +740,6 @@
                 return sum + (Number.isNaN(price) ? 0 : price);
             }, 0);
 
-            const pendingCount = orders.filter((order, idx) => {
-                if (deletedOrders.includes(getOrderKey(order, idx)) || permanentlyDeletedOrders.includes(getOrderKey(order, idx))) return false;
-                const status = getOrderStatus(order, idx);
-                return status !== 'delivered' && status !== 'cancelled';
-            }).length;
             const deliveredCount = orders.filter((order, idx) => !deletedOrders.includes(getOrderKey(order, idx)) && !permanentlyDeletedOrders.includes(getOrderKey(order, idx)) && getOrderStatus(order, idx) === 'delivered').length;
             const cancelledCount = orders.filter((order, idx) => !deletedOrders.includes(getOrderKey(order, idx)) && !permanentlyDeletedOrders.includes(getOrderKey(order, idx)) && getOrderStatus(order, idx) === 'cancelled').length;
 
@@ -1002,7 +992,6 @@
                                             <span className="text-sm text-gray-500 font-medium ml-2">Status:</span>
                                             <select className="border-none text-sm py-1.5 px-2 focus:ring-0 focus:outline-none bg-white font-bold cursor-pointer" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
                                                 <option value="all">All</option>
-                                                <option value="pending">Pending</option>
                                                 <option value="placed">Order Placed</option>
                                                 <option value="confirmed">Confirmed</option>
                                                 <option value="preparing">Preparing</option>
@@ -1116,7 +1105,7 @@
                         </div>
 
                         {/* Stats Cards */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
                             <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
                                 <div className="bg-green-100 w-14 h-14 flex items-center justify-center rounded-2xl text-green-600 text-xl border border-green-200 cursor-pointer hover:bg-green-200 transition-colors" onDoubleClick={() => setShowSales(!showSales)} title="Double-tap to toggle sales"><i className="fas fa-rupee-sign"></i></div>
                                 <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Filtered Sales</p><p className="text-3xl font-black text-green-600">{showSales ? `₹${filteredSales}` : '••••'}</p></div>
@@ -1125,10 +1114,6 @@
                                 <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-2xl text-blue-600 text-xl border border-blue-200"><i className="fas fa-shopping-bag"></i></div>
                                 <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Showing Orders</p><p className="text-3xl font-black text-blue-600">{filteredOrders.length}</p></div>
                             </div>
-                            <button type="button" onClick={() => { setStatusFilter('pending'); setFilterMode('all'); }} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 text-left cursor-pointer transition hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-300" title="Show pending orders">
-                                <div className="bg-yellow-100 w-14 h-14 flex items-center justify-center rounded-2xl text-yellow-700 text-xl border border-yellow-200"><i className="fas fa-hourglass-half"></i></div>
-                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Pending</p><p className="text-3xl font-black text-yellow-700">{pendingCount}</p></div>
-                            </button>
                             <button type="button" onClick={() => { setStatusFilter('delivered'); setFilterMode('all'); }} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 text-left cursor-pointer transition hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-300" title="Show delivered orders">
                                 <div className="bg-emerald-100 w-14 h-14 flex items-center justify-center rounded-2xl text-emerald-600 text-xl border border-emerald-200"><i className="fas fa-check-circle"></i></div>
                                 <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Delivered</p><p className="text-3xl font-black text-emerald-600">{deliveredCount}</p></div>
