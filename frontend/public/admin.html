@@ -1002,24 +1002,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-3 bg-white p-3 rounded-xl shadow-sm border border-gray-200">
-                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 flex-1 min-w-0">
-                                        <span className="text-sm text-gray-500 font-medium ml-2">Export:</span>
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-2 bg-white p-2 rounded-xl shadow-sm border border-gray-200">
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 flex-1 min-w-0">
+                                        <span className="text-xs text-gray-500 font-medium ml-1">Export:</span>
                                         <input
                                             type="date"
                                             value={exportStartDate}
                                             onChange={(e) => setExportStartDate(e.target.value)}
-                                            className="w-full sm:w-auto min-w-0 border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            className="w-full sm:w-auto min-w-0 border border-gray-200 rounded-lg text-xs px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
                                         />
-                                        <span className="text-sm font-bold">to</span>
+                                        <span className="text-xs font-bold">to</span>
                                         <input
                                             type="date"
                                             value={exportEndDate}
                                             onChange={(e) => setExportEndDate(e.target.value)}
-                                            className="w-full sm:w-auto min-w-0 border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            className="w-full sm:w-auto min-w-0 border border-gray-200 rounded-lg text-xs px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
                                         />
                                     </div>
-                                    <button onClick={exportOrders} disabled={exporting} className="w-full sm:w-auto bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors">
+                                    <button onClick={exportOrders} disabled={exporting} className="w-full sm:w-auto bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-colors">
                                         {exporting ? 'Exporting...' : 'Download CSV'}
                                     </button>
                                 </div>
