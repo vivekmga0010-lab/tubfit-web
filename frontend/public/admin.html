@@ -1105,22 +1105,22 @@
                         </div>
 
                         {/* Stats Cards */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
-                                <div className="bg-green-100 w-14 h-14 flex items-center justify-center rounded-2xl text-green-600 text-xl border border-green-200 cursor-pointer hover:bg-green-200 transition-colors" onDoubleClick={() => setShowSales(!showSales)} title="Double-tap to toggle sales"><i className="fas fa-rupee-sign"></i></div>
-                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Filtered Sales</p><p className="text-3xl font-black text-green-600">{showSales ? `₹${filteredSales}` : '••••'}</p></div>
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-8">
+                            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center sm:gap-3 gap-2">
+                                <div className="bg-green-100 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl sm:rounded-2xl text-green-600 text-sm sm:text-base md:text-xl border border-green-200 cursor-pointer hover:bg-green-200 transition-colors flex-shrink-0" onDoubleClick={() => setShowSales(!showSales)} title="Double-tap to toggle sales"><i className="fas fa-rupee-sign"></i></div>
+                                <div><p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wider mb-0.5 text-center sm:text-left">Filtered Sales</p><p className="text-lg sm:text-2xl md:text-3xl font-black text-green-600 text-center sm:text-left">{showSales ? `₹${filteredSales}` : '••••'}</p></div>
                             </div>
-                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
-                                <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-2xl text-blue-600 text-xl border border-blue-200"><i className="fas fa-shopping-bag"></i></div>
-                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Showing Orders</p><p className="text-3xl font-black text-blue-600">{filteredOrders.length}</p></div>
+                            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center sm:gap-3 gap-2">
+                                <div className="bg-blue-100 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl sm:rounded-2xl text-blue-600 text-sm sm:text-base md:text-xl border border-blue-200 flex-shrink-0"><i className="fas fa-shopping-bag"></i></div>
+                                <div><p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wider mb-0.5 text-center sm:text-left">Showing Orders</p><p className="text-lg sm:text-2xl md:text-3xl font-black text-blue-600 text-center sm:text-left">{filteredOrders.length}</p></div>
                             </div>
-                            <button type="button" onClick={() => { setStatusFilter('delivered'); setFilterMode('all'); }} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 text-left cursor-pointer transition hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-300" title="Show delivered orders">
-                                <div className="bg-emerald-100 w-14 h-14 flex items-center justify-center rounded-2xl text-emerald-600 text-xl border border-emerald-200"><i className="fas fa-check-circle"></i></div>
-                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Delivered</p><p className="text-3xl font-black text-emerald-600">{deliveredCount}</p></div>
+                            <button type="button" onClick={() => { setStatusFilter('delivered'); setFilterMode('all'); }} className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center sm:gap-3 gap-2 text-left cursor-pointer transition hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-300" title="Show delivered orders">
+                                <div className="bg-emerald-100 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl sm:rounded-2xl text-emerald-600 text-sm sm:text-base md:text-xl border border-emerald-200 flex-shrink-0"><i className="fas fa-check-circle"></i></div>
+                                <div><p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wider mb-0.5 text-center sm:text-left">Delivered</p><p className="text-lg sm:text-2xl md:text-3xl font-black text-emerald-600 text-center sm:text-left">{deliveredCount}</p></div>
                             </button>
-                            <button type="button" onClick={() => { setStatusFilter('cancelled'); setFilterMode('all'); }} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 text-left cursor-pointer transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300" title="Show cancelled orders">
-                                <div className="bg-red-100 w-14 h-14 flex items-center justify-center rounded-2xl text-red-600 text-xl border border-red-200"><i className="fas fa-ban"></i></div>
-                                <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Cancelled</p><p className="text-3xl font-black text-red-600">{cancelledCount}</p></div>
+                            <button type="button" onClick={() => { setStatusFilter('cancelled'); setFilterMode('all'); }} className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center sm:gap-3 gap-2 text-left cursor-pointer transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300" title="Show cancelled orders">
+                                <div className="bg-red-100 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl sm:rounded-2xl text-red-600 text-sm sm:text-base md:text-xl border border-red-200 flex-shrink-0"><i className="fas fa-ban"></i></div>
+                                <div><p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wider mb-0.5 text-center sm:text-left">Cancelled</p><p className="text-lg sm:text-2xl md:text-3xl font-black text-red-600 text-center sm:text-left">{cancelledCount}</p></div>
                             </button>
                         </div>
 
