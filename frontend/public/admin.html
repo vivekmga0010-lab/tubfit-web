@@ -176,8 +176,72 @@
                 deliveryType: 'home',
                 address: '',
                 deliveryDate: 'Today',
-                timeSlot: 'ASAP'
+                timeSlot: 'ASAP',
+                selectedMenuItemId: 'custom'
             });
+
+            const menuItems = [
+              { id: 'custom', name: 'Custom Item', ingredients: '', price: 0 },
+              { id: 'mg1', name: 'The Fit Bowl', ingredients: 'Grilled Chicken 150g + Quinoa + Broccoli + Bell Peppers + Carrot + Onion + Boiled Egg + Lemon + Olive Oil + Sesame Seeds', price: 179 },
+              { id: 'mg2', name: 'Grilled Chicken Bowl', ingredients: 'Grilled Chicken + Egg + Brown Rice + Fresh Salad + Lemon Juice + Pumpkin Seeds', price: 179 },
+              { id: 'mg3', name: 'Paneer Bowl', ingredients: 'Paneer + Tofu + Quinoa + Sauté Veg + Olive Oil + Tomato Slice + Mix Seeds', price: 179 },
+              { id: 'bk3', name: 'Paneer Bulking Bowl', ingredients: 'Paneer + Brown Rice + Chickpea + Sautéed Vegetable + Soya Chunks + Almonds + Sesame Seeds', price: 229 },
+              { id: 'bk1', name: 'Bulking Chicken Bowl', ingredients: 'Chicken + White Rice + Avocado + Black Beans + Salad + Vegetable + Curd', price: 279 },
+              { id: 'fl1', name: 'Green Bowl', ingredients: 'Lettuce + Cucumber + Broccoli + Chickpea + Lemon & Black Pepper Dressing + Mix Seeds', price: 149 },
+              { id: 'fl2', name: 'Lean Chicken Bowl', ingredients: 'Chicken + Lettuce + Cucumber + Tomato Slice + Olive Oil + Lemon + Spinach', price: 179 },
+              { id: 'fl3', name: 'Lean Veg Bowl (Tofu Fiber)', ingredients: 'Tofu + Quinoa + Sauté Vegetable + Mix Seeds + Lettuce + Cherry Tomato', price: 179 },
+              { id: 'mp1', name: '100gm Protein Chicken Bowl', ingredients: 'Chicken Breast + Whole Egg + Fresh Salad + White Rice', price: 329 },
+              { id: 'mp2', name: '100gm Protein Veg Bowl', ingredients: 'Paneer + Tofu + Soya Chunks + Fresh Salad', price: 329 },
+              { id: 'sl1', name: 'Egg Protein Salad', ingredients: '2 whole eggs + 2 egg whites + boiled chickpeas + lettuce + cucumber + carrot + light dressing + herbs & seasoning', price: 199 },
+              { id: 'sl2', name: 'Paneer Protein Salad', ingredients: 'Paneer (120g) + boiled chickpeas + lettuce + cucumber + carrot + light dressing + herbs & seasoning', price: 219 },
+              { id: 'sl3', name: 'Avocado & Chickpea Salad', ingredients: 'Avocado + Chickpea + Lettuce + Cherry Tomatoes + Olive Oil Dressing', price: 229 },
+              { id: 'sl4', name: 'Protein Power Chicken Salad', ingredients: 'Grilled chicken (150g) + boiled chickpeas + lettuce + cucumber + carrot + olive oil dressing + herbs & seasoning', price: 229 },
+              { id: 'bf4', name: 'Poha Bowl', ingredients: 'Poha + Paneer + Soya Chunks + Peanuts + Veggies', price: 149 },
+              { id: 'bf3', name: 'Egg Breakfast Bowl', ingredients: 'Eggs + Toast + Curd + Fruits', price: 179 },
+              { id: 'bf5', name: 'Fruit n Oat Bowl', ingredients: 'Oats + Mixed Fruits + Chia Seeds', price: 179 },
+              { id: 'bf1', name: 'Chicken Breakfast Salad Bowl', ingredients: 'Chicken + Quinoa + Cucumber + Tomatoes + Lettuce + Onion + Carrot + Curd + Mixed Seeds', price: 189 },
+              { id: 'bf2', name: 'Paneer Breakfast Salad Bowl', ingredients: 'Paneer + Quinoa + Cucumber + Cherry Tomatoes + Lettuce + Carrot + Curd + Flax or Chia Seeds', price: 199 },
+              { id: 'bf7', name: 'Sprouts Morning Bowl', ingredients: 'Mixed Sprouts + Onion + Tomatoes + Cucumber + Coriander + Lemon + Chaat Masala', price: 199 },
+              { id: 'bf6', name: 'Fruit n Nuts Bowl', ingredients: 'Oats + Fruits + Nuts + Seeds Mix', price: 249 }
+            ];
+
+            const generateTimeSlots = () => {
+              const slots = [];
+              const now = new Date();
+              const today = new Date(now);
+              today.setHours(0, 0, 0, 0);
+              
+              const tomorrow = new Date(today);
+              tomorrow.setDate(tomorrow.getDate() + 1);
+              
+              let targetDate = manualOrder.deliveryDate === 'Today' ? today : tomorrow;
+              const openHour = 7;
+              const closeHour = 21;
+              
+              const openTime = new Date(targetDate);
+              openTime.setHours(openHour, 0, 0, 0);
+              const closeTime = new Date(targetDate);
+              closeTime.setHours(closeHour, 0, 0, 0);
+              
+              if (manualOrder.deliveryDate === 'Today') {
+                slots.push('ASAP (in ~60 mins)');
+              }
+              
+              let slotStart = new Date(openTime);
+              while (slotStart < closeTime) {
+                const slotEnd = new Date(slotStart.getTime() + 30 * 60 * 1000);
+                if (slotEnd > closeTime) break;
+                const startHour = slotStart.getHours().toString().padStart(2, '0');
+                const startMin = slotStart.getMinutes().toString().padStart(2, '0');
+                const endHour = slotEnd.getHours().toString().padStart(2, '0');
+                const endMin = slotEnd.getMinutes().toString().padStart(2, '0');
+                slots.push(`${startHour}:${startMin} - ${endHour}:${endMin}`);
+                slotStart = slotEnd;
+              }
+              return slots;
+            };
+
+            const selectedMenuItem = menuItems.find(item => item.id === manualOrder.selectedMenuItemId);
 
             // Server-side authentication
             const handleLogin = async (e) => {
@@ -847,7 +911,7 @@
                         body: JSON.stringify(payload)
                     });
                     setIsManualModalOpen(false);
-                    setManualOrder({ name: '', phone: '', items: '', totalPrice: '', deliveryType: 'home', address: '', deliveryDate: new Date().toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' }), timeSlot: 'ASAP' });
+                    setManualOrder({ name: '', phone: '', items: '', totalPrice: '', deliveryType: 'home', address: '', deliveryDate: new Date().toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' }), timeSlot: 'ASAP', selectedMenuItemId: 'custom' });
                     setTimeout(fetchOrders, 1500); // Refresh data after 1.5 seconds to allow sheet to update
                 } catch (err) {
                     alert("Error saving manual order. Check console.");
@@ -904,8 +968,26 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Order Items (What did they order?)</label>
-                                        <textarea required className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500 h-20" value={manualOrder.items} onChange={e => setManualOrder({...manualOrder, items: e.target.value})} placeholder="1x Grilled Chicken Bowl&#10;1x Extra Egg"></textarea>
+                                        <label className="block text-xs font-bold text-gray-700 mb-1">Menu Item</label>
+                                        <select required className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.selectedMenuItemId} onChange={e => {
+                                          const itemId = e.target.value;
+                                          const item = menuItems.find(m => m.id === itemId);
+                                          setManualOrder({...manualOrder, selectedMenuItemId: itemId, items: itemId === 'custom' ? '' : item.name, totalPrice: itemId === 'custom' ? '' : item.price.toString()});
+                                        }}>
+                                          {menuItems.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+                                        </select>
+                                        {selectedMenuItem && selectedMenuItem.id !== 'custom' && (
+                                          <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-lg text-xs text-gray-700">
+                                            <p className="font-bold mb-1">Ingredients:</p>
+                                            <p className="text-blue-900">{selectedMenuItem.ingredients}</p>
+                                          </div>
+                                        )}
+                                        {manualOrder.selectedMenuItemId === 'custom' && (
+                                          <div>
+                                            <label className="block text-xs font-bold text-gray-700 mb-1 mt-2">Custom Items Description</label>
+                                            <textarea className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500 h-20" value={manualOrder.items} onChange={e => setManualOrder({...manualOrder, items: e.target.value})} placeholder="1x Grilled Chicken Bowl&#10;1x Extra Egg"></textarea>
+                                          </div>
+                                        )}
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
@@ -927,7 +1009,9 @@
                                         </div>
                                         <div>
                                             <label className="block text-xs font-bold text-gray-700 mb-1">Time Slot</label>
-                                            <input required type="text" className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.timeSlot} onChange={e => setManualOrder({...manualOrder, timeSlot: e.target.value})} placeholder="ASAP" />
+                                            <select required className="w-full p-3 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-green-500" value={manualOrder.timeSlot} onChange={e => setManualOrder({...manualOrder, timeSlot: e.target.value})}>
+                                              {generateTimeSlots().map((slot, idx) => <option key={idx} value={slot}>{slot}</option>)}
+                                            </select>
                                         </div>
                                     </div>
                                     <div>
