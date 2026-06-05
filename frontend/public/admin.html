@@ -570,6 +570,15 @@
                     const candidate = bracketDate ? bracketDate[1] : raw;
                     const normalized = candidate.replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
 
+                    if (!bracketDate) {
+                        if (lower.startsWith('today')) return today;
+                        if (lower.startsWith('tomorrow')) {
+                            const tomorrow = new Date(today);
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+                            return tomorrow;
+                        }
+                    }
+
                     const parseExplicitDayMonthYear = (value) => {
                         const match = value.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);
                         if (!match) return null;
