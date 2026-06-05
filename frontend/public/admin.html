@@ -927,10 +927,10 @@
                                 <div className="bg-yellow-100 w-14 h-14 flex items-center justify-center rounded-2xl text-yellow-700 text-xl border border-yellow-200"><i className="fas fa-hourglass-half"></i></div>
                                 <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Pending</p><p className="text-3xl font-black text-yellow-700">{pendingCount}</p></div>
                             </button>
-                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
+                            <button type="button" onClick={() => { setStatusFilter('delivered'); setFilterMode('all'); }} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 text-left cursor-pointer transition hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-300" title="Show delivered orders">
                                 <div className="bg-emerald-100 w-14 h-14 flex items-center justify-center rounded-2xl text-emerald-600 text-xl border border-emerald-200"><i className="fas fa-check-circle"></i></div>
                                 <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Delivered</p><p className="text-3xl font-black text-emerald-600">{deliveredCount}</p></div>
-                            </div>
+                            </button>
                         </div>
 
                         {error && <div className="bg-red-50 text-red-600 p-4 rounded-xl mb-6 text-sm font-medium"><i className="fas fa-exclamation-circle mr-2"></i> {error}</div>}
