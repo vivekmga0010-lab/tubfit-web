@@ -622,7 +622,13 @@
             const filteredOrders = orders.filter((order, idx) => {
                 const key = getOrderKey(order, idx);
                 if (deletedOrders.includes(key)) return false;
-                if (statusFilter !== 'all' && getOrderStatus(order, idx) !== statusFilter) return false;
+                if (statusFilter !== 'all') {
+                    if (statusFilter === 'pending') {
+                        if (getOrderStatus(order, idx) === 'delivered') return false;
+                    } else if (getOrderStatus(order, idx) !== statusFilter) {
+                        return false;
+                    }
+                }
                 const orderDate = parseOrderDate(order);
                 const today = todayStart();
                 if (filterMode === 'today') return orderDate && dateKey(orderDate) === dateKey(today);
@@ -630,6 +636,7 @@
                 if (filterMode === 'custom') {
                     return filterCustomDate ? orderDate && dateKey(orderDate) === filterCustomDate : true;
                 }
+                if (filterMode === 'all') return true;
                 return true;
             });
 
@@ -850,6 +857,7 @@
                                                 <option value="today">Today</option>
                                                 <option value="upcoming">Upcoming</option>
                                                 <option value="custom">Custom</option>
+                                                <option value="all">All</option>
                                             </select>
                                             {filterMode === 'custom' && (
                                                 <input
@@ -867,6 +875,7 @@
                                             <span className="text-sm text-gray-500 font-medium ml-2">Status:</span>
                                             <select className="border-none text-sm py-1.5 px-2 focus:ring-0 focus:outline-none bg-white font-bold cursor-pointer" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
                                                 <option value="all">All</option>
+                                                <option value="pending">Pending</option>
                                                 <option value="placed">Order Placed</option>
                                                 <option value="preparing">Preparing</option>
                                                 <option value="out_for_delivery">Out for Delivery</option>
@@ -914,10 +923,10 @@
                                 <div className="bg-blue-100 w-14 h-14 flex items-center justify-center rounded-2xl text-blue-600 text-xl border border-blue-200"><i className="fas fa-shopping-bag"></i></div>
                                 <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Showing Orders</p><p className="text-3xl font-black text-blue-600">{filteredOrders.length}</p></div>
                             </div>
-                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
+                            <button type="button" onClick={() => { setStatusFilter('pending'); setFilterMode('all'); }} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 text-left cursor-pointer transition hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-300" title="Show pending orders">
                                 <div className="bg-yellow-100 w-14 h-14 flex items-center justify-center rounded-2xl text-yellow-700 text-xl border border-yellow-200"><i className="fas fa-hourglass-half"></i></div>
                                 <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Pending</p><p className="text-3xl font-black text-yellow-700">{pendingCount}</p></div>
-                            </div>
+                            </button>
                             <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5">
                                 <div className="bg-emerald-100 w-14 h-14 flex items-center justify-center rounded-2xl text-emerald-600 text-xl border border-emerald-200"><i className="fas fa-check-circle"></i></div>
                                 <div><p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Delivered</p><p className="text-3xl font-black text-emerald-600">{deliveredCount}</p></div>
