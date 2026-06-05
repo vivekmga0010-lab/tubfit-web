@@ -151,7 +151,10 @@
             const [statusFilter, setStatusFilter] = useState('all');
             const [orderStatuses, setOrderStatuses] = useState({});
             const [deletedOrders, setDeletedOrders] = useState([]);
+            const [permanentlyDeletedOrders, setPermanentlyDeletedOrders] = useState([]);
             const [restoreModalOpen, setRestoreModalOpen] = useState(false);
+            const [selectedDeletedOrders, setSelectedDeletedOrders] = useState([]);
+            const [deletedFilterDate, setDeletedFilterDate] = useState('');
             const [expandedOrderKeys, setExpandedOrderKeys] = useState([]);
             const [exportStartDate, setExportStartDate] = useState(getTodayKey());
             const [exportEndDate, setExportEndDate] = useState(getTodayKey());
@@ -495,6 +498,8 @@
             };
 
             const restoreDeletedOrders = () => {
+                setSelectedDeletedOrders([]);
+                setDeletedFilterDate('');
                 setRestoreModalOpen(true);
             };
 
@@ -502,18 +507,42 @@
                 const nextDeleted = deletedOrders.filter((item) => item !== key);
                 setDeletedOrders(nextDeleted);
                 localStorage.setItem('tubAdminDeletedOrders', JSON.stringify(nextDeleted));
+                setSelectedDeletedOrders((prev) => prev.filter((item) => item !== key));
                 if (nextDeleted.length === 0) {
                     setRestoreModalOpen(false);
                 }
             };
 
+            const restoreSelectedDeletedOrders = () => {
+                if (selectedDeletedOrders.length === 0) return;
+                const nextDeleted = deletedOrders.filter((key) => !selectedDeletedOrders.includes(key));
+                setDeletedOrders(nextDeleted);
+                localStorage.setItem('tubAdminDeletedOrders', JSON.stringify(nextDeleted));
+                setSelectedDeletedOrders([]);
+                if (nextDeleted.length === 0) setRestoreModalOpen(false);
+            };
+
+            const deleteSelectedDeletedOrders = () => {
+                if (selectedDeletedOrders.length === 0) return;
+                const nextPermanent = [...new Set([...permanentlyDeletedOrders, ...selectedDeletedOrders])];
+                const nextDeleted = deletedOrders.filter((key) => !selectedDeletedOrders.includes(key));
+                setPermanentlyDeletedOrders(nextPermanent);
+                setDeletedOrders(nextDeleted);
+                localStorage.setItem('tubAdminPermanentlyDeletedOrders', JSON.stringify(nextPermanent));
+                localStorage.setItem('tubAdminDeletedOrders', JSON.stringify(nextDeleted));
+                setSelectedDeletedOrders([]);
+                if (nextDeleted.length === 0) setRestoreModalOpen(false);
+            };
+
             const restoreAllDeletedOrders = () => {
                 setDeletedOrders([]);
                 localStorage.removeItem('tubAdminDeletedOrders');
+                setSelectedDeletedOrders([]);
                 setRestoreModalOpen(false);
             };
 
             const closeRestoreModal = () => {
+                setSelectedDeletedOrders([]);
                 setRestoreModalOpen(false);
             };
 
@@ -666,7 +695,7 @@
 
             const filteredOrders = orders.filter((order, idx) => {
                 const key = getOrderKey(order, idx);
-                if (deletedOrders.includes(key)) return false;
+                if (deletedOrders.includes(key) || permanentlyDeletedOrders.includes(key)) return false;
                 if (statusFilter !== 'all') {
                     if (statusFilter === 'pending') {
                         if (getOrderStatus(order, idx) === 'delivered') return false;
@@ -691,14 +720,34 @@
             }, 0);
 
             const pendingCount = orders.filter((order, idx) => {
-                if (deletedOrders.includes(getOrderKey(order, idx))) return false;
+                if (deletedOrders.includes(getOrderKey(order, idx)) || permanentlyDeletedOrders.includes(getOrderKey(order, idx))) return false;
                 return getOrderStatus(order, idx) !== 'delivered';
             }).length;
-            const deliveredCount = orders.filter((order, idx) => !deletedOrders.includes(getOrderKey(order, idx)) && getOrderStatus(order, idx) === 'delivered').length;
+            const deliveredCount = orders.filter((order, idx) => !deletedOrders.includes(getOrderKey(order, idx)) && !permanentlyDeletedOrders.includes(getOrderKey(order, idx)) && getOrderStatus(order, idx) === 'delivered').length;
 
             const deletedOrderList = orders
                 .map((order, idx) => ({ order, key: getOrderKey(order, idx), index: idx }))
-                .filter((entry) => deletedOrders.includes(entry.key));
+                .filter((entry) => deletedOrders.includes(entry.key) && !permanentlyDeletedOrders.includes(entry.key));
+
+            const filteredDeletedOrderList = deletedOrderList.filter((entry) => {
+                if (!deletedFilterDate) return true;
+                const orderDate = parseOrderDate(entry.order);
+                return orderDate && dateKey(orderDate) === deletedFilterDate;
+            });
+
+            const toggleDeletedOrderSelection = (key) => {
+                setSelectedDeletedOrders((prev) => prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]);
+            };
+
+            const isDeletedOrderSelected = (key) => selectedDeletedOrders.includes(key);
+
+            const toggleSelectAllDeletedOrders = () => {
+                const visibleKeys = filteredDeletedOrderList.map((entry) => entry.key);
+                const allSelected = visibleKeys.every((key) => selectedDeletedOrders.includes(key)) && visibleKeys.length > 0;
+                setSelectedDeletedOrders(allSelected ? [] : visibleKeys);
+            };
+
+            const selectedDeletedCount = selectedDeletedOrders.length;
 
             useEffect(() => {
                 if (isAuthenticated) {
@@ -713,6 +762,7 @@
                 try {
                     setOrderStatuses(JSON.parse(localStorage.getItem('tubAdminOrderStatuses') || '{}'));
                     setDeletedOrders(JSON.parse(localStorage.getItem('tubAdminDeletedOrders') || '[]'));
+                    setPermanentlyDeletedOrders(JSON.parse(localStorage.getItem('tubAdminPermanentlyDeletedOrders') || '[]'));
                     setPaymentStatuses(JSON.parse(localStorage.getItem('tubAdminPaymentStatuses') || '{}'));
                     setOrderChecklist(JSON.parse(localStorage.getItem('tubAdminOrderChecklist') || '{}'));
                 } catch (err) {
@@ -969,16 +1019,42 @@
                                                 </div>
                                                 <button onClick={closeRestoreModal} className="text-gray-500 hover:text-gray-900 text-sm font-bold">Close</button>
                                             </div>
-                                            <div className="max-h-[60vh] overflow-y-auto p-6 space-y-4">
-                                                {deletedOrderList.length === 0 ? (
+                                            <div className="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
+                                                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                                                    <label className="text-sm font-bold text-gray-700">Filter by delivery date:</label>
+                                                    <input
+                                                        type="date"
+                                                        value={deletedFilterDate}
+                                                        onChange={(e) => setDeletedFilterDate(e.target.value)}
+                                                        className="border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                                                    />
+                                                    {deletedFilterDate && (
+                                                        <button onClick={() => setDeletedFilterDate('')} className="text-sm text-gray-500 hover:text-gray-900">Clear</button>
+                                                    )}
+                                                    <button onClick={toggleSelectAllDeletedOrders} className="text-sm text-green-700 font-bold hover:text-green-900">
+                                                        {filteredDeletedOrderList.length > 0 && filteredDeletedOrderList.every((entry) => selectedDeletedOrders.includes(entry.key)) ? 'Deselect All' : 'Select All'}
+                                                    </button>
+                                                </div>
+                                                <div className="text-sm text-gray-500">{filteredDeletedOrderList.length} matching deleted order{filteredDeletedOrderList.length === 1 ? '' : 's'}</div>
+                                            </div>
+                                            <div className="max-h-[60vh] overflow-y-auto p-1 space-y-3">
+                                                {filteredDeletedOrderList.length === 0 ? (
                                                     <div className="text-center text-sm text-gray-500">No deleted orders available.</div>
-                                                ) : deletedOrderList.map(({ order, key, index }) => (
+                                                ) : filteredDeletedOrderList.map(({ order, key, index }) => (
                                                     <div key={key} className="rounded-3xl border border-gray-200 p-4 bg-gray-50 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                                                        <div>
-                                                            <div className="text-sm font-bold text-gray-900">{order.orderId || `Order ${index + 1}`}</div>
-                                                            <div className="text-sm text-gray-600">{order.customerName || order.name || 'Unknown customer'}</div>
-                                                            <div className="text-xs text-gray-500">{order.deliveryDate || 'No date'} · {order.timeSlot || 'No slot'}</div>
-                                                            <div className="text-xs text-gray-500 mt-2">{String(order.items || '').slice(0, 120)}{String(order.items || '').length > 120 ? '…' : ''}</div>
+                                                        <div className="flex items-start gap-3">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={isDeletedOrderSelected(key)}
+                                                                onChange={() => toggleDeletedOrderSelection(key)}
+                                                                className="mt-1 h-4 w-4 text-green-600 border-gray-300 rounded-sm focus:ring-green-500"
+                                                            />
+                                                            <div>
+                                                                <div className="text-sm font-bold text-gray-900">{order.orderId || `Order ${index + 1}`}</div>
+                                                                <div className="text-sm text-gray-600">{order.customerName || order.name || 'Unknown customer'}</div>
+                                                                <div className="text-xs text-gray-500">{order.deliveryDate || 'No date'} · {order.timeSlot || 'No slot'}</div>
+                                                                <div className="text-xs text-gray-500 mt-2">{String(order.items || '').slice(0, 120)}{String(order.items || '').length > 120 ? '…' : ''}</div>
+                                                            </div>
                                                         </div>
                                                         <div className="flex flex-col gap-2 md:items-end">
                                                             <div className="text-lg font-black text-green-700">₹{order.totalPrice || '0'}</div>
@@ -988,9 +1064,15 @@
                                                 ))}
                                             </div>
                                             <div className="flex flex-col gap-3 border-t border-gray-200 px-6 py-4 sm:flex-row sm:justify-between sm:items-center">
-                                                <p className="text-sm text-gray-500">{deletedOrderList.length} deleted order{deletedOrderList.length === 1 ? '' : 's'}.</p>
+                                                <p className="text-sm text-gray-500">{filteredDeletedOrderList.length} deleted order{filteredDeletedOrderList.length === 1 ? '' : 's'}.</p>
                                                 <div className="flex flex-wrap gap-3">
                                                     <button onClick={closeRestoreModal} className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-2xl text-sm font-bold">Cancel</button>
+                                                    <button onClick={restoreSelectedDeletedOrders} disabled={selectedDeletedOrders.length === 0} className={`px-4 py-2 rounded-2xl text-sm font-bold ${selectedDeletedOrders.length > 0 ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}`}>
+                                                        Restore Selected ({selectedDeletedOrders.length})
+                                                    </button>
+                                                    <button onClick={deleteSelectedDeletedOrders} disabled={selectedDeletedOrders.length === 0} className={`px-4 py-2 rounded-2xl text-sm font-bold ${selectedDeletedOrders.length > 0 ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-gray-100 text-gray-500 cursor-not-allowed'}`}>
+                                                        Delete Selected ({selectedDeletedOrders.length})
+                                                    </button>
                                                     <button onClick={restoreAllDeletedOrders} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-2xl text-sm font-bold">Restore All</button>
                                                 </div>
                                             </div>
