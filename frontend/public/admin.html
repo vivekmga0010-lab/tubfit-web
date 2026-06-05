@@ -154,6 +154,7 @@
             const [permanentlyDeletedOrders, setPermanentlyDeletedOrders] = useState([]);
             const [restoreModalOpen, setRestoreModalOpen] = useState(false);
             const [selectedDeletedOrders, setSelectedDeletedOrders] = useState([]);
+            const [selectedOrderKeys, setSelectedOrderKeys] = useState([]);
             const [deletedFilterDate, setDeletedFilterDate] = useState('');
             const [expandedOrderKeys, setExpandedOrderKeys] = useState([]);
             const [exportStartDate, setExportStartDate] = useState(getTodayKey());
@@ -495,6 +496,28 @@
                 const nextDeleted = [...new Set([...deletedOrders, key])];
                 setDeletedOrders(nextDeleted);
                 localStorage.setItem('tubAdminDeletedOrders', JSON.stringify(nextDeleted));
+                setSelectedOrderKeys((prev) => prev.filter((item) => item !== key));
+            };
+
+            const toggleOrderSelection = (key) => {
+                setSelectedOrderKeys((prev) => prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]);
+            };
+
+            const isOrderSelected = (key) => selectedOrderKeys.includes(key);
+
+            const toggleSelectAllOrders = () => {
+                const visibleKeys = filteredOrders.map((order, idx) => getOrderKey(order, idx));
+                const allSelected = visibleKeys.length > 0 && visibleKeys.every((key) => selectedOrderKeys.includes(key));
+                setSelectedOrderKeys(allSelected ? [] : visibleKeys);
+            };
+
+            const deleteSelectedOrders = () => {
+                if (selectedOrderKeys.length === 0) return;
+                if (!confirm(`Delete ${selectedOrderKeys.length} selected order${selectedOrderKeys.length === 1 ? '' : 's'}?`)) return;
+                const nextDeleted = [...new Set([...deletedOrders, ...selectedOrderKeys])];
+                setDeletedOrders(nextDeleted);
+                localStorage.setItem('tubAdminDeletedOrders', JSON.stringify(nextDeleted));
+                setSelectedOrderKeys([]);
             };
 
             const restoreDeletedOrders = () => {
@@ -1004,6 +1027,9 @@
                                         {exporting ? 'Exporting...' : 'Download CSV'}
                                     </button>
                                 </div>
+                                <button onClick={deleteSelectedOrders} disabled={selectedOrderKeys.length === 0} className={`w-full sm:w-auto ${selectedOrderKeys.length > 0 ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-gray-100 text-gray-500 cursor-not-allowed'} px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors`}>
+                                    Delete Selected {selectedOrderKeys.length > 0 ? `(${selectedOrderKeys.length})` : ''}
+                                </button>
                                 {deletedOrders.length > 0 && (
                                     <button onClick={restoreDeletedOrders} className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-colors">
                                         <i className="fas fa-undo"></i> Restore Deleted
@@ -1110,6 +1136,9 @@
                                 <table className="admin-table min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
+                                            <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                                <input type="checkbox" checked={filteredOrders.length > 0 && filteredOrders.every((order, idx) => isOrderSelected(getOrderKey(order, idx)))} onChange={toggleSelectAllOrders} className="h-4 w-4 text-green-600 border-gray-300 rounded-sm focus:ring-green-500" />
+                                            </th>
                                             <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date & Time</th>
                                             <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Customer</th>
                                             <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Items</th>
@@ -1120,8 +1149,11 @@
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-100">
-                                        {loading && orders.length === 0 ? <tr><td colSpan="7" className="px-6 py-12 text-center text-gray-500"><i className="fas fa-circle-notch fa-spin text-3xl mb-3 text-green-500"></i><p className="font-medium">Loading your orders...</p></td></tr> : filteredOrders.length === 0 ? <tr><td colSpan="7" className="px-6 py-12 text-center text-gray-400"><div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3"><i className="fas fa-inbox text-2xl"></i></div><p className="font-medium">No orders found for this filter.</p></td></tr> : filteredOrders.map((order, idx) => (
+                                        {loading && orders.length === 0 ? <tr><td colSpan="8" className="px-6 py-12 text-center text-gray-500"><i className="fas fa-circle-notch fa-spin text-3xl mb-3 text-green-500"></i><p className="font-medium">Loading your orders...</p></td></tr> : filteredOrders.length === 0 ? <tr><td colSpan="8" className="px-6 py-12 text-center text-gray-400"><div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3"><i className="fas fa-inbox text-2xl"></i></div><p className="font-medium">No orders found for this filter.</p></td></tr> : filteredOrders.map((order, idx) => (
                                             <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                                                <td className="px-6 py-5 whitespace-nowrap">
+                                                    <input type="checkbox" checked={isOrderSelected(getOrderKey(order, idx))} onChange={() => toggleOrderSelection(getOrderKey(order, idx))} className="h-4 w-4 text-green-600 border-gray-300 rounded-sm focus:ring-green-500" />
+                                                </td>
                                                 <td data-label="Date & Time" className="px-6 py-5 whitespace-nowrap">{order.orderId && <div className="text-[11px] font-mono font-bold text-indigo-600 mb-1.5">{order.orderId}</div>}<div className="text-sm font-bold text-gray-900">{order.deliveryDate}</div><div className="text-xs font-bold text-green-700 bg-green-100 inline-flex px-2.5 py-1 rounded-lg mt-1.5"><i className="far fa-clock mr-1"></i> {order.timeSlot}</div><div className="text-[10px] text-gray-400 mt-2 font-medium">Placed: {formatPlacedTime(order)}</div></td>
                                                 <td data-label="Customer" className="px-6 py-5"><div className="text-sm font-bold text-gray-900">{order.customerName}</div><div className="text-xs text-gray-500 mt-1 font-medium bg-gray-100 inline-block px-2 py-1 rounded-md">{order.phone}</div></td>
                                                 <td data-label="Items" className="px-6 py-5"><div className="space-y-3">{renderOrderItems(order.items, getOrderKey(order, idx))}</div>{order.gymPromoCode && <div className="mt-2 inline-flex items-center px-2 py-1 rounded-md text-[11px] font-bold bg-orange-100 text-orange-800 uppercase tracking-wider border border-orange-200"><i className="fas fa-tag mr-1.5"></i> {order.gymPromoCode}</div>}</td>
@@ -1162,6 +1194,7 @@
                                     <p className="font-medium">No orders found for this filter.</p>
                                 </div>
                             ) : filteredOrders.map((order, idx) => {
+                                const orderKey = getOrderKey(order, idx);
                                 const expanded = isOrderExpanded(order, idx);
                                 const status = getOrderStatus(order, idx);
                                 const payment = getPaymentStatus(order, idx);
@@ -1173,6 +1206,10 @@
                                     <div key={idx} className={`mobile-order-card border border-t-4 ${cardBgClass} ${promoHighlight}`}>
                                         <div className="mobile-order-card-header">
                                             <div>
+                                                <label className="inline-flex items-center gap-2 mb-2">
+                                                    <input type="checkbox" checked={isOrderSelected(orderKey)} onChange={() => toggleOrderSelection(orderKey)} className="h-4 w-4 text-green-600 border-gray-300 rounded-sm focus:ring-green-500" />
+                                                    <span className="text-xs font-semibold text-gray-600">Select</span>
+                                                </label>
                                                 {order.orderId && <div className="text-[11px] font-mono font-bold text-indigo-600 mb-1.5">{order.orderId}</div>}
                                                 <div className="text-base font-bold text-gray-900">{order.deliveryDate}</div>
                                                 <div className="text-sm text-gray-500 mt-1">{order.timeSlot}</div>
