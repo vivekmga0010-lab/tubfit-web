@@ -297,13 +297,17 @@
                 const startNewItem = (text) => {
                     const cleanedText = stripMacros(text.replace(/^[*_]+|[*_]+$/g, '').trim());
                     if (current && current.name) parsed.push(current);
-                    current = { name: cleanedText, ingredients: [], addons: '' };
+                    current = { name: cleanedText, ingredients: [], addons: [] };
                 };
 
                 const isHeaderLine = (text) => /\*.*\*\s*\(₹\d+/i.test(text) || /\d+x\s+\w+/i.test(text);
                 const isIngredientLine = (text) => /Ingredients?:/i.test(text) || /\+/.test(text);
                 const extractIngredients = (text) => {
                     const cleaned = stripMacros(text.replace(/Ingredients?:/i, '').trim());
+                    return cleaned.split(/\s*\+\s*|\s*,\s*/).map(part => part.trim()).filter(Boolean);
+                };
+                const extractAddons = (text) => {
+                    const cleaned = stripMacros(text.replace(/^Add-?ons?:/i, '').trim());
                     return cleaned.split(/\s*\+\s*|\s*,\s*/).map(part => part.trim()).filter(Boolean);
                 };
 
@@ -319,7 +323,7 @@
                         return;
                     }
                     if (/^Add-?ons?:/i.test(cleaned)) {
-                        if (current) current.addons = stripMacros(cleaned);
+                        if (current) current.addons = extractAddons(cleaned);
                         return;
                     }
                     if (!current) {
@@ -360,7 +364,21 @@
                                 ))}
                             </div>
                         )}
-                        {entry.addons && <div className="mt-2 text-[11px] text-gray-500">{entry.addons}</div>}
+                        {entry.addons.length > 0 && (
+                            <div className="mt-2 grid gap-2">
+                                {entry.addons.map((addon) => (
+                                    <label key={addon} className="flex items-center gap-2 rounded-xl border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm text-yellow-900 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={getChecklistStatus(orderKey, addon)}
+                                            onChange={() => toggleChecklistStatus(orderKey, addon)}
+                                            className="w-4 h-4 text-yellow-600 border-yellow-300 rounded-sm focus:ring-yellow-500"
+                                        />
+                                        <span className="font-semibold">{addon}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 ));
             };
