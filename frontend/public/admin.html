@@ -1126,9 +1126,9 @@
                                                 </div>
                                                 <button onClick={closeRestoreModal} className="text-gray-500 hover:text-gray-900 text-sm font-bold">Close</button>
                                             </div>
-                                            <div className="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
-                                                <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
-                                                    <label className="text-sm font-bold text-gray-700">Filter by delivery date:</label>
+                                            <div className="flex flex-col gap-4 px-4 sm:px-6 py-4 border-b border-gray-200 sm:flex-row sm:items-center sm:justify-between">
+                                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                                                    <label className="text-sm font-bold text-gray-700 whitespace-nowrap">Filter by delivery date:</label>
                                                     <input
                                                         type="date"
                                                         value={deletedFilterDate}
@@ -1136,13 +1136,15 @@
                                                         className="border border-gray-200 rounded-xl text-sm px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto"
                                                     />
                                                     {deletedFilterDate && (
-                                                        <button onClick={() => setDeletedFilterDate('')} className="text-sm text-gray-500 hover:text-gray-900">Clear</button>
+                                                        <button onClick={() => setDeletedFilterDate('')} className="text-sm text-gray-500 hover:text-gray-900 whitespace-nowrap">Clear</button>
                                                     )}
-                                                    <button onClick={toggleSelectAllDeletedOrders} className="text-sm text-green-700 font-bold hover:text-green-900">
+                                                </div>
+                                                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 flex-1 sm:flex-none sm:justify-end">
+                                                    <button onClick={toggleSelectAllDeletedOrders} className="text-sm text-green-700 font-bold hover:text-green-900 whitespace-nowrap">
                                                         {filteredDeletedOrderList.length > 0 && filteredDeletedOrderList.every((entry) => selectedDeletedOrders.includes(entry.key)) ? 'Deselect All' : 'Select All'}
                                                     </button>
+                                                    <div className="text-sm text-gray-500 whitespace-nowrap">{filteredDeletedOrderList.length} matching deleted order{filteredDeletedOrderList.length === 1 ? '' : 's'}</div>
                                                 </div>
-                                                <div className="text-sm text-gray-500">{filteredDeletedOrderList.length} matching deleted order{filteredDeletedOrderList.length === 1 ? '' : 's'}</div>
                                             </div>
                                             <div className="max-h-[75vh] overflow-y-auto p-3 space-y-3">
                                                 {filteredDeletedOrderList.length === 0 ? (
