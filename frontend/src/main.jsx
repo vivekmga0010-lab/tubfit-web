@@ -2005,6 +2005,12 @@ import { createRoot } from 'react-dom/client';
                       <a href={`tel:${CALL_NUMBER}`} className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
                         <i className="fas fa-phone text-green-400 text-lg"></i> <span>{CALL_NUMBER}</span>
                       </a>
+                      <a href="tel:9560574178" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+                        <i className="fas fa-phone text-green-400 text-lg"></i> <span>9560574178</span>
+                      </a>
+                      <a href={`mailto:${EMAIL_ADDRESS}`} className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+                        <i className="fas fa-envelope text-green-400 text-lg"></i> <span>{EMAIL_ADDRESS}</span>
+                      </a>
                       <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
                         <i className="fab fa-whatsapp text-[#25D366] text-lg"></i> <span>+91 {WHATSAPP_NUMBER.substring(2)}</span>
                       </a>
