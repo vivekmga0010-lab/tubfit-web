@@ -912,8 +912,11 @@
                     });
                     setIsManualModalOpen(false);
                     setManualOrder({ name: '', phone: '', items: '', totalPrice: '', deliveryType: 'home', address: '', deliveryDate: new Date().toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' }), timeSlot: 'ASAP', selectedMenuItemId: 'custom' });
-                    setTimeout(fetchOrders, 1500); // Refresh data after 1.5 seconds to allow sheet to update
+                    setStatusFilter('all');
+                    setFilterMode('all');
+                    setTimeout(fetchOrders, 500); // Refresh immediately to show new order
                 } catch (err) {
+                    console.error('Error saving manual order:', err);
                     alert("Error saving manual order. Check console.");
                 } finally {
                     setIsSubmitting(false);
