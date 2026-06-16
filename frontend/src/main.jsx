@@ -53,7 +53,19 @@ import { createRoot } from 'react-dom/client';
 
         const WHATSAPP_NUMBER = "919560535741"; 
         const CALL_NUMBER = "+919560535741";
+        const SECOND_NUMBER = "9560574178";
         const EMAIL_ADDRESS = "tubdelhi@outlook.com";
+
+        const formatIndianNumber = (num) => {
+          const digits = num.replace(/\D/g, '');
+          if (digits.length === 12 && digits.startsWith('91')) {
+            return `+91 ${digits.slice(2, 4)} ${digits.slice(4, 8)} ${digits.slice(8)}`;
+          }
+          if (digits.length === 10) {
+            return `+91 ${digits.slice(0, 2)} ${digits.slice(2, 6)} ${digits.slice(6)}`;
+          }
+          return num;
+        };
 
         const menuData = {
           "Muscle Gain": [
@@ -2003,16 +2015,16 @@ import { createRoot } from 'react-dom/client';
                     <div className="flex flex-col gap-4 items-center md:items-start">
                       <h4 className="text-white font-semibold mb-2 text-lg">Contact Us</h4>
                       <a href={`tel:${CALL_NUMBER}`} className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
-                        <i className="fas fa-phone text-green-400 text-lg"></i> <span>{CALL_NUMBER}</span>
+                        <i className="fas fa-phone text-green-400 text-lg"></i> <span>{formatIndianNumber(CALL_NUMBER)}</span>
                       </a>
-                      <a href="tel:9560574178" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
-                        <i className="fas fa-phone text-green-400 text-lg"></i> <span>9560574178</span>
+                      <a href={`tel:${SECOND_NUMBER}`} className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+                        <i className="fas fa-phone text-green-400 text-lg"></i> <span>{formatIndianNumber(SECOND_NUMBER)}</span>
                       </a>
                       <a href={`mailto:${EMAIL_ADDRESS}`} className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
                         <i className="fas fa-envelope text-green-400 text-lg"></i> <span>{EMAIL_ADDRESS}</span>
                       </a>
                       <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
-                        <i className="fab fa-whatsapp text-[#25D366] text-lg"></i> <span>+91 {WHATSAPP_NUMBER.substring(2)}</span>
+                        <i className="fab fa-whatsapp text-[#25D366] text-lg"></i> <span>{formatIndianNumber(WHATSAPP_NUMBER)}</span>
                       </a>
                       </div>
                   </div>
