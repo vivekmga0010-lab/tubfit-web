@@ -80,16 +80,16 @@ import { createRoot } from 'react-dom/client';
                 { id: 'd1', qty: 1 },
                 { id: 'd2', qty: 1 },
                 { id: 't4', qty: 1 }
-              ], price: 179, image: "/uploads/the_fit_bowl.webp", badges: ["Best Seller", "High Protein"] },
-            { id: "mg2", name: "Grilled Chicken Bowl", ingredients: "Grilled Chicken + Egg + Brown Rice + Fresh Salad + Lemon Juice + Pumpkin Seeds", calories: 650, protein: 65, carbs: 58, fats: 20, price: 179, image: "/uploads/grilled_chicken_bowl.webp", badges: ["Extra Protein"] },
-            { id: "mg3", name: "Paneer Bowl", ingredients: "Paneer + Tofu + Quinoa + Sauté Veg + Olive Oil + Tomato Slice + Mix Seeds", calories: 680, protein: 45, carbs: 52, fats: 34, price: 179, image: "/uploads/paneer_bowl.webp", badges: ["Vegetarian"] },
+              ], price: 199, image: "/uploads/the_fit_bowl.webp", badges: ["Best Seller", "High Protein"] },
+            { id: "mg2", name: "Grilled Chicken Bowl", ingredients: "Grilled Chicken + Egg + Brown Rice + Fresh Salad + Lemon Juice + Pumpkin Seeds", calories: 650, protein: 65, carbs: 58, fats: 20, price: 199, image: "/uploads/grilled_chicken_bowl.webp", badges: ["Extra Protein"] },
+            { id: "mg3", name: "Paneer Bowl", ingredients: "Paneer + Tofu + Quinoa + Sauté Veg + Olive Oil + Tomato Slice + Mix Seeds", calories: 680, protein: 45, carbs: 52, fats: 34, price: 199, image: "/uploads/paneer_bowl.webp", badges: ["Vegetarian"] },
             { id: "bk3", name: "Paneer Bulking Bowl", ingredients: "Paneer + Brown Rice + Chickpea + Sautéed Vegetable + Soya Chunks + Almonds + Sesame Seeds", calories: 820, protein: 60, carbs: 90, fats: 36, price: 229, image: "/uploads/paneer_bulking_bowl.webp", badges: ["Vegetarian Bulk"] },
             { id: "bk1", name: "Bulking Chicken Bowl", ingredients: "Chicken + White Rice + Avocado + Black Beans + Salad + Vegetable + Curd", calories: 750, protein: 55, carbs: 80, fats: 26, price: 279, image: "/uploads/bulking_chicken_bowl.webp", badges: ["Calorie Dense"] }
           ],
           "Fat Loss": [
             { id: "fl1", name: "Green Bowl", ingredients: "Lettuce + Cucumber + Broccoli + Chickpea + Lemon & Black Pepper Dressing + Mix Seeds", calories: 380, protein: 22, carbs: 34, fats: 14, price: 149, image: "/uploads/green_bowl.webp", badges: ["Vegan", "Low Calorie"] },
-            { id: "fl2", name: "Lean Chicken Bowl", ingredients: "Chicken + Lettuce + Cucumber + Tomato Slice + Olive Oil + Lemon + Spinach", calories: 450, protein: 60, carbs: 18, fats: 14, price: 179, image: "/uploads/lean_chicken_bowl.webp", badges: ["Keto Friendly"] },
-            { id: "fl3", name: "Lean Veg Bowl (Tofu Fiber)", ingredients: "Tofu + Quinoa + Sauté Vegetable + Mix Seeds + Lettuce + Cherry Tomato", calories: 420, protein: 35, carbs: 40, fats: 12, price: 179, image: "/uploads/lean_veg_bowl.webp", badges: ["Vegan", "High Fiber"] }
+            { id: "fl2", name: "Lean Chicken Bowl", ingredients: "Chicken + Lettuce + Cucumber + Tomato Slice + Olive Oil + Lemon + Spinach", calories: 450, protein: 60, carbs: 18, fats: 14, price: 199, image: "/uploads/lean_chicken_bowl.webp", badges: ["Keto Friendly"] },
+            { id: "fl3", name: "Lean Veg Bowl (Tofu Fiber)", ingredients: "Tofu + Quinoa + Sauté Vegetable + Mix Seeds + Lettuce + Cherry Tomato", calories: 420, protein: 35, carbs: 40, fats: 12, price: 199, image: "/uploads/lean_veg_bowl.webp", badges: ["Vegan", "High Fiber"] }
           ],
           "Max Protein": [
             { id: "mp1", name: "100gm Protein Chicken Bowl", ingredients: "Chicken Breast + Whole Egg + Fresh Salad + White Rice", calories: 850, protein: 100, carbs: 35, fats: 20, price: 329, image: "/uploads/100gm_protein_chicken_bowl.webp", badges: ["100g Protein", "Beast Mode"] },
@@ -103,8 +103,8 @@ import { createRoot } from 'react-dom/client';
           ],
           "Breakfast": [
             { id: "bf4", name: "Poha Bowl", ingredients: "Poha + Paneer + Soya Chunks + Peanuts + Veggies", calories: 480, protein: 24, carbs: 55, fats: 12, price: 149, image: "/uploads/poha_bowl.webp", badges: ["Clean Eating", "Energy Boost"] },
-            { id: "bf3", name: "Egg Breakfast Bowl", ingredients: "Eggs + Toast + Curd + Fruits", calories: 400, protein: 24, carbs: 30, fats: 17, price: 179, image: "/uploads/egg_breakfast_bowl.webp", badges: ["High Protein", "Energy Boost"] },
-            { id: "bf5", name: "Fruit n Oat Bowl", ingredients: "Oats + Mixed Fruits + Chia Seeds", calories: 320, protein: 9, carbs: 50, fats: 8, price: 179, image: "/uploads/fruit_n_oat_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
+            { id: "bf3", name: "Egg Breakfast Bowl", ingredients: "Eggs + Toast + Curd + Fruits", calories: 400, protein: 24, carbs: 30, fats: 17, price: 199, image: "/uploads/egg_breakfast_bowl.webp", badges: ["High Protein", "Energy Boost"] },
+            { id: "bf5", name: "Fruit n Oat Bowl", ingredients: "Oats + Mixed Fruits + Chia Seeds", calories: 320, protein: 9, carbs: 50, fats: 8, price: 199, image: "/uploads/fruit_n_oat_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
             { id: "bf1", name: "Chicken Breakfast Salad Bowl", ingredients: "Chicken + Quinoa + Cucumber + Tomatoes + Lettuce + Onion + Carrot + Curd + Mixed Seeds", calories: 450, protein: 36, carbs: 40, fats: 14, price: 189, image: "/uploads/chicken_quinoa_salad_bowl.webp", badges: ["High Protein", "Clean Eating"] },
             { id: "bf2", name: "Paneer Breakfast Salad Bowl", ingredients: "Paneer + Quinoa + Cucumber + Cherry Tomatoes + Lettuce + Carrot + Curd + Flax or Chia Seeds", calories: 440, protein: 21, carbs: 38, fats: 16, price: 199, image: "/uploads/paneer_quinoa_salad_bowl.webp", badges: ["High Protein", "Low Calorie"] },
             { id: "bf7", name: "Sprouts Morning Bowl", ingredients: "Mixed Sprouts + Onion + Tomatoes + Cucumber + Coriander + Lemon + Chaat Masala", calories: 240, protein: 15, carbs: 20, fats: 6, price: 199, image: "/uploads/sprout_morning_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
