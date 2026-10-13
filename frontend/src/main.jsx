@@ -102,22 +102,24 @@ import { createRoot } from 'react-dom/client';
             { id: "sl4", name: "Protein Power Chicken Salad", ingredients: "Grilled chicken (150g) + boiled chickpeas + lettuce + cucumber + carrot + olive oil dressing + herbs & seasoning", calories: 420, protein: 48, carbs: 26, fats: 11, price: 229, image: "/uploads/chicken_chickpeas_salad.webp", badges: ["Fresh", "High Protein"] }
           ],
           "Breakfast": [
-            { id: "bf4", name: "Poha Bowl", ingredients: "Poha + Paneer + Soya Chunks + Peanuts + Veggies", calories: 480, protein: 24, carbs: 55, fats: 12, price: 149, image: "/uploads/poha_bowl.webp", badges: ["Clean Eating", "Energy Boost"] },
-            { id: "bf5", name: "Fruit n Oat Bowl", ingredients: "Oats + Mixed Fruits + Chia Seeds", calories: 320, protein: 9, carbs: 50, fats: 8, price: 199, image: "/uploads/fruit_n_oat_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
+            { id: "bf4", name: "Poha Bowl", ingredients: "Poha + Peanuts + Veggies", calories: 480, protein: 24, carbs: 55, fats: 12, price: 149, image: "/uploads/poha_bowl.webp", badges: ["Clean Eating", "Energy Boost"] },
+            { id: "bf5", name: "Fruit n Oat Bowl", ingredients: "Oats + Mixed Fruits + Chia Seeds", calories: 320, protein: 9, carbs: 50, fats: 8, price: 179, image: "/uploads/fruit_n_oat_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
             { id: "bf1", name: "Chicken Breakfast Salad Bowl", ingredients: "Chicken + Quinoa + Cucumber + Tomatoes + Lettuce + Onion + Carrot + Curd + Mixed Seeds", calories: 450, protein: 36, carbs: 40, fats: 14, price: 189, image: "/uploads/chicken_quinoa_salad_bowl.webp", badges: ["High Protein", "Clean Eating"] },
             { id: "bf2", name: "Paneer Breakfast Salad Bowl", ingredients: "Paneer + Quinoa + Cucumber + Cherry Tomatoes + Lettuce + Carrot + Curd + Flax or Chia Seeds", calories: 440, protein: 21, carbs: 38, fats: 16, price: 199, image: "/uploads/paneer_quinoa_salad_bowl.webp", badges: ["High Protein", "Low Calorie"] },
             { id: "bf7", name: "Sprouts Morning Bowl", ingredients: "Mixed Sprouts + Onion + Tomatoes + Cucumber + Coriander + Lemon + Chaat Masala", calories: 240, protein: 15, carbs: 20, fats: 6, price: 199, image: "/uploads/sprout_morning_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
-            { id: "bf6", name: "Fruit n Nuts Bowl", ingredients: "Oats + Fruits + Nuts + Seeds Mix", calories: 500, protein: 11, carbs: 60, fats: 22, price: 249, image: "/uploads/fruit_n_nuts_oat_bowl.webp", badges: ["Energy Boost", "Clean Eating"] }
+            { id: "bf6", name: "Fruit n Nuts Bowl", ingredients: "Oats + Fruits + Nuts + Seeds Mix", calories: 500, protein: 11, carbs: 60, fats: 22, price: 249, image: "/uploads/fruit_n_nuts_oat_bowl.webp", badges: ["Energy Boost", "Clean Eating"] },
+            { id: "ns1", name: "Normal Fruit with Curd", ingredients: "Seasonal Fruits + Curd", price: 199, image: "/uploads/Fruit_Salad_Bowl.webp", badges: ["Navratri Special", "New"] },
+            { id: "ns2", name: "Malai Kulfi Greek Yogurt with Exotic Fruits", ingredients: "Malai Kulfi + Greek Yogurt + Exotic Fruits", price: 329, image: "/uploads/malai_kulfi_greek_yogurt_with_exotic_fruits.webp", badges: ["Navratri Special", "New"] }
           ],
           "Guilt-Free Add-ons": [
+            { id: "gf4", name: "Blueberry Smoothie", ingredients: "Blueberry + Strawberry + Nuts + Milk", price: 199, image: "/uploads/blueberry_smoothie.webp", badges: ["Navratri Special", "New"] },
             { id: "gf1", name: "Whey Protein Berry Smoothie", ingredients: "Isolate Whey + Mixed Berries + Almond Milk (No Sugar)", description: "A thick, creamy post-workout blend packed with premium isolate and antioxidant-rich berries.", calories: 180, protein: 25, carbs: 10, fats: 3, price: 149, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
-            { id: "gf2", name: "Citrus Detox Water", ingredients: "Lemon + Mint + Cucumber + Chia Seeds", description: "Infused with crisp citrus and essential electrolytes to crush bloating and keep you hydrated.", calories: 15, protein: 0, carbs: 3, fats: 0, price: 69, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
-            { id: "gf3", name: "Keto Almond Brownie", ingredients: "Almond Flour + Dark Chocolate + Stevia + Whey Protein", description: "Decadent keto-friendly brownie made with almond flour, dark chocolate and protein for guilt-free recovery.", calories: 210, protein: 12, carbs: 8, fats: 14, price: 129, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true }
-          ]
+            { id: "gf2", name: "Citrus Detox Water", ingredients: "Lemon + Mint + Cucumber + Chia Seeds", description: "Infused with crisp citrus and essential electrolytes to crush bloating and keep you hydrated.", calories: 15, protein: 0, carbs: 3, fats: 0, price: 69, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true }
+          ],
         };
 
         const MOISTURE_KEYWORDS = [
-          'dressing', 'curd', 'yogurt', 'olive oil', 'lemon', 'vinaigrette',
+          'dressing', 'curd', 'yogurt', 'milk', 'olive oil', 'lemon', 'vinaigrette',
           'sauce', 'avocado', 'cucumber', 'tomato', 'mint'
         ];
 
@@ -353,9 +355,17 @@ import { createRoot } from 'react-dom/client';
         function App() {
           // Menu scroll management state
           const [activeMenuTab, setActiveMenuTab] = useState(categories[0]);
+          const [activeHeroSlide, setActiveHeroSlide] = useState(0);
           const scrollContainerRef = useRef(null);
           const tabsContainerRef = useRef(null);
           const isTabClicking = useRef(false);
+
+          useEffect(() => {
+            const slideTimer = window.setInterval(() => {
+              setActiveHeroSlide(currentSlide => (currentSlide + 1) % 2);
+            }, 3000);
+            return () => window.clearInterval(slideTimer);
+          }, []);
 
           const [cart, setCart] = useState([]);
           const [isCartOpen, setIsCartOpen] = useState(false);
@@ -1261,17 +1271,31 @@ import { createRoot } from 'react-dom/client';
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                       </span>
-                      Fresh & Macro-Calculated
+                      Navratri Special • Limited Time
                     </div>
                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 leading-[1.1] mb-6 tracking-tight">
-                      Custom Bowls for<br/>
+                      Navratri<br/>
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#25D366] to-emerald-600 drop-shadow-sm">
-                        Every Fitness Goal
+                        Special Meal
                       </span>
                     </h1>
                     <p className="text-lg md:text-xl font-medium text-gray-600 mb-10 max-w-xl mx-auto md:mx-0 leading-relaxed">
-                      Chef-crafted, nutritionist-approved diet bowls delivered fresh to your door. Hit your macros without sacrificing taste.
+                      Celebrate with refreshing smoothies, fruit and curd, and a creamy kulfi Greek yogurt bowl with exotic fruits.
                     </p>
+                    <div className="max-w-xl mx-auto md:mx-0 mb-8 grid gap-2 text-left">
+                      <a href="#menu" className="flex items-center justify-between gap-4 rounded-xl border border-green-100 bg-white/90 px-4 py-3 shadow-sm hover:border-green-300 transition-colors">
+                        <span className="font-semibold text-gray-800">Blueberry Smoothie</span>
+                        <span className="font-black text-green-700">₹199</span>
+                      </a>
+                      <a href="#menu" className="flex items-center justify-between gap-4 rounded-xl border border-green-100 bg-white/90 px-4 py-3 shadow-sm hover:border-green-300 transition-colors">
+                        <span className="font-semibold text-gray-800">Normal Fruit with Curd</span>
+                        <span className="font-black text-green-700">₹199</span>
+                      </a>
+                      <a href="#menu" className="flex items-center justify-between gap-4 rounded-xl border border-green-100 bg-white/90 px-4 py-3 shadow-sm hover:border-green-300 transition-colors">
+                        <span className="font-semibold text-gray-800">Malai Kulfi Greek Yogurt with Exotic Fruits</span>
+                        <span className="font-black text-green-700">₹329</span>
+                      </a>
+                    </div>
                     <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start mb-10">
                       <a href="#menu" className="w-full sm:w-auto px-8 py-4 bg-gray-900 hover:bg-black text-white rounded-full font-bold text-lg transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-1 flex items-center justify-center gap-3">
                         Order Now <i className="fas fa-arrow-right text-[#25D366]"></i>
@@ -1297,38 +1321,29 @@ import { createRoot } from 'react-dom/client';
                   </div>
                   
                   <div className="flex-1 relative w-full max-w-lg lg:max-w-xl flex justify-center mt-8 md:mt-0">
-                    <div className="relative w-full aspect-square max-w-[400px] lg:max-w-[500px]">
-                       <div className="absolute inset-0 bg-green-400/20 rounded-full blur-3xl transform scale-110"></div>
-                       
-                       <div className="relative rounded-full aspect-square overflow-hidden shadow-2xl ring-[12px] ring-white hover:scale-105 transition-transform duration-700 ease-out z-10">
-                         <img src="/hero_section.webp" alt="Premium Fitness Bowl" className="w-full h-full object-cover" fetchpriority="high" />
-                       </div>
-
-                       {/* Floating Badges */}
-                       <div className="absolute top-10 left-2 sm:-left-6 bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20 animate-bounce" style={{ animationDuration: '3s' }}>
-                          <div className="w-8 h-8 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center text-sm">
-                            <i className="fas fa-fire"></i>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Calories</p>
-                            <p className="text-sm font-black text-gray-800">~600 kcal</p>
-                          </div>
-                       </div>
-
-                       <div className="absolute bottom-20 right-2 sm:-right-8 bg-white/95 backdrop-blur-sm px-4 py-2.5 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
-                          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center text-sm">
-                            <i className="fas fa-dumbbell"></i>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Protein</p>
-                            <p className="text-sm font-black text-gray-800">100g</p>
-                          </div>
-                       </div>
-
-                       <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-2 rounded-full shadow-xl border-4 border-white flex items-center gap-2 z-20 whitespace-nowrap">
-                          <i className="fas fa-leaf text-[#25D366]"></i>
-                          <span className="font-bold text-sm tracking-wide">100% Fresh Ingredients</span>
-                       </div>
+                    <div className="relative w-full aspect-[3/4] max-w-[400px] lg:max-w-[460px]">
+                      <div className="absolute inset-0 bg-green-400/20 rounded-[28px] blur-3xl transform scale-105"></div>
+                      <div className="relative h-full overflow-hidden rounded-[28px] shadow-2xl ring-8 ring-white z-10">
+                        <div
+                          className="flex h-full transition-transform duration-700 ease-in-out"
+                          style={{ transform: `translateX(-${activeHeroSlide * 100}%)` }}
+                        >
+                          <img src="/hero.webp" alt="Navratri Special Meal" className="h-full w-full shrink-0 object-cover" fetchpriority="high" />
+                          <img src="/uploads/blueberry_smoothie.webp" alt="Blueberry Smoothie" className="h-full w-full shrink-0 object-cover" />
+                        </div>
+                        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                          {[0, 1].map(slideIndex => (
+                            <button
+                              key={slideIndex}
+                              type="button"
+                              aria-label={`Show hero image ${slideIndex + 1}`}
+                              aria-pressed={activeHeroSlide === slideIndex}
+                              onClick={() => setActiveHeroSlide(slideIndex)}
+                              className={`h-2.5 rounded-full border border-white shadow ${activeHeroSlide === slideIndex ? 'w-7 bg-white' : 'w-2.5 bg-white/50'}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1384,6 +1399,7 @@ import { createRoot } from 'react-dom/client';
                           {category === "Premium Salads" && "🥗 "}
                           {category === "Breakfast" && "🍳 "}
                           {category === "Guilt-Free Add-ons" && "🥤 "}
+                          {category === "Navratri Special Meal" && "🌺 "}
                           {category} <span className="ml-1 opacity-80 text-xs">({balancedMenuData[category].length})</span>
                         </button>
                       ))}

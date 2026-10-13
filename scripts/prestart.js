@@ -31,18 +31,14 @@ function run(cmd) {
 
 try {
   appendLog('=== prestart run ===');
-  if (!fs.existsSync(indexPath)) {
-    appendLog('⚠️ Frontend assets missing. Building frontend now...');
-    // Make sure frontend deps are installed
-    run('npm --prefix frontend install');
-    // Build frontend
-    run('npm --prefix frontend run build');
-    // Copy built frontend into backend/dist
-    run('node scripts/build.js');
-    appendLog('✓ Frontend build completed and copied to backend/dist');
-  } else {
-    appendLog('✓ Frontend assets already present at backend/dist');
-  }
+
+  // Always rebuild the frontend so the live app does not serve stale menu data from an old dist bundle.
+  appendLog('🔄 Rebuilding frontend assets...');
+  run('npm --prefix frontend install');
+  run('npm --prefix frontend run build');
+  run('node scripts/build.js');
+  appendLog('✓ Frontend build completed and copied to backend/dist');
+
   appendLog('=== prestart finished ===');
 } catch (err) {
   appendLog('Prestart error: ' + (err && err.message ? err.message : String(err)));
