@@ -107,11 +107,13 @@ import { createRoot } from 'react-dom/client';
             { id: "bf1", name: "Chicken Breakfast Salad Bowl", ingredients: "Chicken + Quinoa + Cucumber + Tomatoes + Lettuce + Onion + Carrot + Curd + Mixed Seeds", calories: 450, protein: 36, carbs: 40, fats: 14, price: 189, image: "/uploads/chicken_quinoa_salad_bowl.webp", badges: ["High Protein", "Clean Eating"] },
             { id: "bf2", name: "Paneer Breakfast Salad Bowl", ingredients: "Paneer + Quinoa + Cucumber + Cherry Tomatoes + Lettuce + Carrot + Curd + Flax or Chia Seeds", calories: 440, protein: 21, carbs: 38, fats: 16, price: 199, image: "/uploads/paneer_quinoa_salad_bowl.webp", badges: ["High Protein", "Low Calorie"] },
             { id: "bf7", name: "Sprouts Morning Bowl", ingredients: "Mixed Sprouts + Onion + Tomatoes + Cucumber + Coriander + Lemon + Chaat Masala", calories: 240, protein: 15, carbs: 20, fats: 6, price: 199, image: "/uploads/sprout_morning_bowl.webp", badges: ["Low Calorie", "Clean Eating"] },
-            { id: "bf6", name: "Fruit n Nuts Bowl", ingredients: "Oats + Fruits + Nuts + Seeds Mix", calories: 500, protein: 11, carbs: 60, fats: 22, price: 249, image: "/uploads/fruit_n_nuts_oat_bowl.webp", badges: ["Energy Boost", "Clean Eating"] }
+            { id: "bf6", name: "Fruit n Nuts Bowl", ingredients: "Oats + Fruits + Nuts + Seeds Mix", calories: 500, protein: 11, carbs: 60, fats: 22, price: 249, image: "/uploads/fruit_n_nuts_oat_bowl.webp", badges: ["Energy Boost", "Clean Eating"] },
+            { id: "ns1", name: "Normal Fruit with Curd", ingredients: "Seasonal Fruits + Curd", price: 199, image: "/uploads/normal_fruits_with_curd.webp", badges: ["Navratri Special", "New"] },
+            { id: "ns2", name: "Malai Kulfi Greek Yogurt with Exotic Fruits", ingredients: "Malai Kulfi + Greek Yogurt + Exotic Fruits", price: 329, image: "/uploads/malai_kulfi_greek_yogurt_with_exotic_fruits.webp", badges: ["Navratri Special", "New"] }
           ],
           "Guilt-Free Add-ons": [
+            { id: "gf4", name: "Blueberry Smoothie", ingredients: "Blueberry + Strawberry + Nuts + Milk", price: 199, image: "/uploads/blueberry_smoothie.webp", badges: ["Navratri Special", "New"] },
             { id: "gf1", name: "Whey Protein Berry Smoothie", ingredients: "Isolate Whey + Mixed Berries + Almond Milk (No Sugar)", description: "A thick, creamy post-workout blend packed with premium isolate and antioxidant-rich berries.", calories: 180, protein: 25, carbs: 10, fats: 3, price: 149, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true },
-            { id: "gf2", name: "Citrus Detox Water", ingredients: "Lemon + Mint + Cucumber + Chia Seeds", description: "Infused with crisp citrus and essential electrolytes to crush bloating and keep you hydrated.", calories: 15, protein: 0, carbs: 3, fats: 0, price: 69, image: "/uploads/green_bowl.webp", badges: ["Coming Soon"], upcoming: true }
           ],
         };
 
