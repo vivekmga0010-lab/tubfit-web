@@ -1744,13 +1744,12 @@ import { createRoot } from 'react-dom/client';
                               <h4 className="text-2xl font-bold text-gray-900 mb-2">Starter Plan</h4>
                               <p className="text-gray-700 font-semibold mb-1">10 Bowls</p>
                               <p className="text-blue-600 font-bold text-lg mb-4">Valid for 15 days</p>
-                              <p className="text-gray-600 mb-1 text-sm">Up to ₹199 per bowl</p>
                               <p className="text-blue-500 font-bold mb-6">Save up to 5%</p>
                               
                               <div className="bg-blue-50 rounded-xl p-4 mb-6 border border-blue-200">
                                   <p className="text-sm font-bold text-gray-900 mb-3">Includes:</p>
                                   <ul className="space-y-2 text-sm text-gray-700">
-                                      <li className="flex items-center gap-2"><i className="fas fa-check text-blue-500"></i> Access to all bowls up to ₹199</li>
+                                      <li className="flex items-center gap-2"><i className="fas fa-check text-blue-500"></i> Access to all bowls</li>
                                       <li className="flex items-center gap-2"><i className="fas fa-check text-blue-500"></i> Freshly prepared meals</li>
                                       <li className="flex items-center gap-2"><i className="fas fa-check text-blue-500"></i> Customizations available</li>
                                   </ul>
@@ -1767,7 +1766,6 @@ import { createRoot } from 'react-dom/client';
                               <h4 className="text-2xl font-bold mb-2">Fitness Plan</h4>
                               <p className="text-gray-300 font-semibold mb-1">20 Bowls</p>
                               <p className="text-green-400 font-bold text-lg mb-4">Valid for 30 days</p>
-                              <p className="text-gray-300 mb-1 text-sm">Up to ₹249 per bowl</p>
                               <p className="text-green-400 font-bold mb-6">Save up to 10%</p>
                               
                               <div className="bg-green-900/30 rounded-xl p-4 mb-6 border border-green-500/30">
@@ -1790,7 +1788,7 @@ import { createRoot } from 'react-dom/client';
                               <h4 className="text-2xl font-bold text-gray-900 mb-2">🔥 Pro Plan</h4>
                               <p className="text-gray-700 font-semibold mb-1">30 Bowls</p>
                               <p className="text-purple-600 font-bold text-lg mb-4">Valid for 45 days</p>
-                              <p className="text-gray-600 mb-1 text-sm">Covers full menu (up to ₹329)</p>
+                              <p className="text-gray-600 mb-1 text-sm">Covers full menu</p>
                               <p className="text-purple-600 font-bold mb-6">Save up to 15%</p>
                               
                               <div className="bg-purple-50 rounded-xl p-4 mb-6 border border-purple-200">
