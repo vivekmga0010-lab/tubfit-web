@@ -717,8 +717,12 @@
                     const parseExplicitDayMonthYear = (value) => {
                         const match = value.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);
                         if (!match) return null;
-                        const parsed = new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
-                        return Number.isNaN(parsed.getTime()) ? null : parsed;
+                        const day = Number(match[1]);
+                        const month = Number(match[2]) - 1;
+                        const year = Number(match[3]);
+                        const parsed = new Date(year, month, day);
+                        if (Number.isNaN(parsed.getTime()) || parsed.getFullYear() !== year || parsed.getMonth() !== month || parsed.getDate() !== day) return null;
+                        return parsed;
                     };
 
                     const parseMonthName = (value) => {
@@ -730,7 +734,8 @@
                         const month = new Date(`${monthText} 1, ${year}`).getMonth();
                         if (Number.isNaN(month)) return null;
                         const parsed = new Date(year, month, day);
-                        return Number.isNaN(parsed.getTime()) ? null : parsed;
+                        if (Number.isNaN(parsed.getTime()) || parsed.getFullYear() !== year || parsed.getMonth() !== month || parsed.getDate() !== day) return null;
+                        return parsed;
                     };
 
                     const parseLooseDate = (value) => {
